@@ -1,69 +1,24 @@
-# React + TypeScript + Vite
+# Hi there 👋
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+I'm Tom, a full stack engineer based in Sydney, Australia.
 
-Currently, two official plugins are available:
+## About me
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<a href="https://www.typescriptlang.org/" target="_blank"><img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white" alt="TypeScript"></a> <a href="https://nodejs.org/" target="_blank"><img src="https://img.shields.io/badge/node.js-339933?style=flat&logo=nodedotjs&logoColor=white" alt="Node.js"></a> <a href="https://react.dev/" target="_blank"><img src="https://img.shields.io/badge/react-%2320232a.svg?style=flat&logo=react&logoColor=%2361DAFB" alt="React"></a> <a href="https://developer.chrome.com/docs/extensions" target="_blank"><img src="https://img.shields.io/badge/Chrome-4285F4?style=flat&logo=google-chrome&logoColor=white" alt="Chrome"></a> <a href="https://ethereum.org/en/web3/" target="_blank"><img src="https://img.shields.io/badge/web3-%235B5194.svg?style=flat&logo=web3dotjs&logoColor=white" alt="Web3"></a>
 
-## Expanding the ESLint configuration
+- Experienced full-stack engineer specializing in TypeScript, React, and Node.js.
+- Solid background in both fintech and cryptocurrency.
+- Product leader and ex-founder, having run multiple projects and businesses.
+- I typically work in Next.js for full-stack projects and have extensive experience building Chrome extensions, Crypto Wallets, and integrations.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## My work
 
-```js
-export default tseslint.config([
-	globalIgnores(["dist"]),
-	{
-		files: ["**/*.{ts,tsx}"],
-		extends: [
-			// Other configs...
+- [Flow Wallet Extension](https://github.com/onflow/FRW-Extension) - technical lead on the Chrome Extension
+- [Flowgen](https://github.com/onflow/flowgen) - recent hackathon project. Image image NFT generator and marketplace
+- [Pet Rescue Game](https://github.com/tombeckenham/pet-rescue-game) - game I put together during the 2024 presidential debate
 
-			// Remove tseslint.configs.recommended and replace with this
-			...tseslint.configs.recommendedTypeChecked,
-			// Alternatively, use this for stricter rules
-			...tseslint.configs.strictTypeChecked,
-			// Optionally, add this for stylistic rules
-			...tseslint.configs.stylisticTypeChecked,
+## Links
 
-			// Other configs...
-		],
-		languageOptions: {
-			parserOptions: {
-				project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-				tsconfigRootDir: import.meta.dirname,
-			},
-			// other options...
-		},
-	},
-]);
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default tseslint.config([
-	globalIgnores(["dist"]),
-	{
-		files: ["**/*.{ts,tsx}"],
-		extends: [
-			// Other configs...
-			// Enable lint rules for React
-			reactX.configs["recommended-typescript"],
-			// Enable lint rules for React DOM
-			reactDom.configs.recommended,
-		],
-		languageOptions: {
-			parserOptions: {
-				project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-				tsconfigRootDir: import.meta.dirname,
-			},
-			// other options...
-		},
-	},
-]);
-```
+- <a href="https://www.linkedin.com/in/tombeckenham/" target="_blank"><img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=flat&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
+- <a href="https://x.com/tombeckenham" target="_blank"><img src="https://img.shields.io/badge/X-000000?style=flat&logo=x&logoColor=white" alt="X"></a>
+- <a href="https://medium.com/@tombeckenham" target="_blank"><img src="https://img.shields.io/badge/Medium-12100E?style=flat&logo=medium&logoColor=white" alt="Medium"></a>
