@@ -9,7 +9,6 @@ I'm Tom, a full stack engineer based in Sydney, Australia.
 - Experienced full-stack engineer specializing in TypeScript, React, and Node.js.
 - Solid background in both fintech and cryptocurrency.
 - Product leader and ex-founder, having run multiple projects and businesses.
-- I typically work in Next.js for full-stack projects and have extensive experience building Chrome extensions, Crypto Wallets, and integrations.
 
 ## My work
 
@@ -22,3 +21,4 @@ I'm Tom, a full stack engineer based in Sydney, Australia.
 - <a href="https://www.linkedin.com/in/tombeckenham/" target="_blank"><img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=flat&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
 - <a href="https://x.com/tombeckenham" target="_blank"><img src="https://img.shields.io/badge/X-000000?style=flat&logo=x&logoColor=white" alt="X"></a>
 - <a href="https://medium.com/@tombeckenham" target="_blank"><img src="https://img.shields.io/badge/Medium-12100E?style=flat&logo=medium&logoColor=white" alt="Medium"></a>
+- <a href="https://www.toptal.com/resume/tom-beckenham" target="_blank"><img src="https://img.shields.io/badge/toptal-toptal?style=flat-square&logo=toptal&logoColor=white&labelColor=0f256e&color=0f256e" alt="Toptal"></a>
