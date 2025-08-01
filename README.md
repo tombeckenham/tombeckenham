@@ -12,6 +12,7 @@ I'm Tom, a full stack engineer based in Sydney, Australia.
 
 ## My work
 
+- [Crypto Trade](https://github.com/tombeckenham/crypto-trade) - Example of high performance trading backend
 - [Flow Wallet Extension](https://github.com/onflow/FRW-Extension) - technical lead on the Chrome Extension
 - [Flowgen](https://github.com/onflow/flowgen) - recent hackathon project. Image image NFT generator and marketplace
 - [Pet Rescue Game](https://github.com/tombeckenham/pet-rescue-game) - game I put together during the 2024 presidential debate
