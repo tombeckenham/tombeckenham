@@ -14,6 +14,7 @@ Technical founder. Building [OpenStory](https://openstory.so) — AI video gener
 ## Open source
 
 - **[TanStack/ai](https://github.com/TanStack/ai)** — authored the [fal.ai adapter](https://github.com/TanStack/ai/pull/237) for image and video generation. Also shipped NanoBanana Pro 2 support, an OpenRouter SDK upgrade with structured-output, and assorted fixes.
+- **[dotfiles](https://github.com/tombeckenham/dotfiles)** — my setup for multi-agent Claude Code workflows with git worktrees.
 
 ## Previously
 
