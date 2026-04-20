@@ -1,339 +1,611 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import profileHero from "./assets/images/profile-hero.png";
-import flowLogo from "./assets/images/flow-logo.svg";
-import commaLogo from "./assets/images/comma-logo.png";
-import flowWallet from "./assets/images/flow-wallet.png";
 import "./App.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
 	const heroRef = useRef<HTMLDivElement>(null);
-	const flowRef = useRef<HTMLDivElement>(null);
-	const commaRef = useRef<HTMLDivElement>(null);
-	const socialRef = useRef<HTMLDivElement>(null);
+	const nowRef = useRef<HTMLDivElement>(null);
+	const ossRef = useRef<HTMLDivElement>(null);
+	const writingRef = useRef<HTMLDivElement>(null);
+	const prevRef = useRef<HTMLDivElement>(null);
+	const contactRef = useRef<HTMLDivElement>(null);
+	const clockRef = useRef<HTMLSpanElement>(null);
+	const uptimeRef = useRef<HTMLSpanElement>(null);
 
 	useEffect(() => {
 		const hero = heroRef.current;
-		const flow = flowRef.current;
-		const comma = commaRef.current;
-		const social = socialRef.current;
-
-		if (!hero || !flow || !comma || !social) return;
-
-		// Hero animation
-		gsap.fromTo(
-			hero.children,
-			{ opacity: 0, y: 50 },
-			{ opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" }
-		);
-
-		// Flow section animation
-		gsap.fromTo(
-			flow.children,
-			{ opacity: 0, x: -100 },
-			{
-				opacity: 1,
-				x: 0,
-				duration: 1,
-				stagger: 0.1,
-				scrollTrigger: {
-					trigger: flow,
-					start: "top 80%",
-					end: "bottom 20%",
-					toggleActions: "play none none reverse",
+		if (hero) {
+			gsap.fromTo(
+				hero.querySelectorAll("[data-reveal]"),
+				{ opacity: 0, y: 12 },
+				{
+					opacity: 1,
+					y: 0,
+					duration: 0.55,
+					stagger: 0.05,
+					ease: "expo.out",
+					delay: 0.1,
 				},
-			}
-		);
+			);
+		}
 
-		// Comma section animation
-		gsap.fromTo(
-			comma.children,
-			{ opacity: 0, x: 100 },
-			{
-				opacity: 1,
-				x: 0,
-				duration: 1,
-				stagger: 0.1,
-				scrollTrigger: {
-					trigger: comma,
-					start: "top 80%",
-					end: "bottom 20%",
-					toggleActions: "play none none reverse",
+		const sections = [
+			nowRef.current,
+			ossRef.current,
+			writingRef.current,
+			prevRef.current,
+			contactRef.current,
+		];
+		sections.forEach((section) => {
+			if (!section) return;
+			gsap.fromTo(
+				section.querySelectorAll("[data-reveal]"),
+				{ opacity: 0, y: 14 },
+				{
+					opacity: 1,
+					y: 0,
+					duration: 0.55,
+					stagger: 0.04,
+					ease: "expo.out",
+					scrollTrigger: {
+						trigger: section,
+						start: "top 80%",
+						toggleActions: "play none none reverse",
+					},
 				},
-			}
-		);
+			);
+		});
+	}, []);
 
-		// Social links animation
-		gsap.fromTo(
-			social.children,
-			{ opacity: 0, scale: 0.8 },
-			{
-				opacity: 1,
-				scale: 1,
-				duration: 0.8,
-				stagger: 0.1,
-				scrollTrigger: {
-					trigger: social,
-					start: "top 90%",
-					toggleActions: "play none none reverse",
-				},
+	useEffect(() => {
+		const clock = clockRef.current;
+		const uptime = uptimeRef.current;
+		const start = Date.now();
+		const id = window.setInterval(() => {
+			const now = new Date();
+			const hh = String(now.getHours()).padStart(2, "0");
+			const mm = String(now.getMinutes()).padStart(2, "0");
+			const ss = String(now.getSeconds()).padStart(2, "0");
+			if (clock) clock.textContent = `${hh}:${mm}:${ss} AEST`;
+
+			const delta = Math.floor((Date.now() - start) / 1000);
+			const m = String(Math.floor(delta / 60)).padStart(2, "0");
+			const s = String(delta % 60).padStart(2, "0");
+			if (uptime) uptime.textContent = `${m}:${s}`;
+		}, 1000);
+		return () => window.clearInterval(id);
+	}, []);
+
+	useEffect(() => {
+		const ids = ["top", "now", "oss", "writing", "prev", "contact"] as const;
+		const links = document.querySelectorAll<HTMLAnchorElement>(".tn-link");
+		const targets = ids.map((id) => document.getElementById(id));
+		const onScroll = () => {
+			let cur = 0;
+			const y = window.scrollY + 140;
+			targets.forEach((s, i) => {
+				if (s && s.offsetTop <= y) cur = i;
+			});
+			links.forEach((l, i) => l.classList.toggle("active", i === cur));
+		};
+		window.addEventListener("scroll", onScroll, { passive: true });
+		onScroll();
+		return () => window.removeEventListener("scroll", onScroll);
+	}, []);
+
+	useEffect(() => {
+		const id = window.setInterval(() => {
+			if (Math.random() < 0.04) {
+				document.body.style.opacity = (0.85 + Math.random() * 0.1).toFixed(2);
+				window.setTimeout(() => {
+					document.body.style.opacity = "1";
+				}, 70);
 			}
-		);
+		}, 1100);
+		return () => window.clearInterval(id);
 	}, []);
 
 	return (
-		<div className="portfolio">
-			{/* Hero Section */}
-			<section ref={heroRef} className="hero">
-				<div className="hero-bg"></div>
-				<div className="hero-content">
-					<div className="hero-image">
-						<img
-							src={profileHero}
-							alt="Tom Beckenham"
-							className="profile-image"
-						/>
+		<div className="shell">
+			<div className="titlebar">
+				<div className="tb-dots">
+					<span /><span /><span />
+				</div>
+				<div className="tb-title">tom@home: ~/about — zsh — 132×42</div>
+				<div className="tb-meta">v1.0 · synthwave</div>
+			</div>
+
+			<nav className="tnav">
+				<a href="#top" className="tn-link active">~/about</a>
+				<a href="#now" className="tn-link">§01 now/</a>
+				<a href="#oss" className="tn-link">§02 oss/</a>
+				<a href="#writing" className="tn-link">§03 writing/</a>
+				<a href="#prev" className="tn-link">§04 prev/</a>
+				<a href="#contact" className="tn-link">§05 contact/</a>
+			</nav>
+
+			{/* ─────────────── Hero */}
+			<section ref={heroRef} className="hero" id="top">
+				<Prompt path="~/about" cmd="cat README.md" reveal />
+
+				<pre className="ascii" data-reveal aria-label="Tom Beckenham">
+{`████████╗ ██████╗ ███╗   ███╗     ██████╗
+╚══██╔══╝██╔═══██╗████╗ ████║     ██╔══██╗
+   ██║   ██║   ██║██╔████╔██║     ██████╔╝
+   ██║   ██║   ██║██║╚██╔╝██║     ██╔══██╗
+   ██║   ╚██████╔╝██║ ╚═╝ ██║ ██╗ ██████╔╝
+   ╚═╝    ╚═════╝ ╚═╝     ╚═╝ ╚═╝ ╚═════╝`}
+				</pre>
+
+				<p className="tagline" data-reveal>
+					<span className="hl">&gt;</span> Engineer building{" "}
+					<a href="https://openstory.so">OpenStory</a>{" "}
+					<span className="hl">—</span> an open-source platform for AI
+					filmmaking.<span className="cursor pink-b">█</span>
+				</p>
+
+				<p className="lede" data-reveal>
+					Previously founded <a href="#prev">Comma Payments</a> (acquired 2023)
+					and <a href="#prev">Specle</a> (2006). Engineering lead on the Flow
+					Wallet Chrome Extension. Currently shipping AI video generation on
+					TanStack Start &amp; Cloudflare Workers.
+				</p>
+
+				<div className="cmd-row" data-reveal>
+					<a className="cmd-btn primary" href="https://openstory.so">
+						$ open openstory.so
+					</a>
+					<a className="cmd-btn" href="https://github.com/tombeckenham">
+						$ gh repo list tombeckenham
+					</a>
+				</div>
+
+				<div className="stats" data-reveal>
+					<b>name</b><span>tom beckenham</span>
+					<b>role</b><span>technical founder · engineering lead</span>
+					<b>loc</b><span>sydney · 33.8688° s</span>
+					<b>stack</b>
+					<span>typescript · bun · tanstack · cloudflare workers · react</span>
+					<b>focus</b><span>ai video · agentic systems · open source</span>
+					<b>linkedin</b>
+					<span>
+						<a href="https://www.linkedin.com/in/tombeckenham/">
+							linkedin.com/in/tombeckenham
+						</a>{" "}
+						· open to advisory &amp; eng leadership
+					</span>
+				</div>
+			</section>
+
+			{/* ─────────────── §01 Now */}
+			<section ref={nowRef} className="block" id="now">
+				<SectionBar
+					index="§01"
+					path="./now"
+					meta="building openstory · runtime: cloudflare workers"
+					right={<><span className="green">●</span> active</>}
+				/>
+				<div className="block-body">
+					<h2 className="h-sect" data-reveal>
+						Script to screen, <span className="pink">consistent</span> every
+						shot.
+					</h2>
+					<p className="deck" data-reveal>
+						<span className="pink-b">&gt;</span> Paste a script, get a
+						scene-by-scene breakdown, AI-generated frames, and motion video.
+						Characters, locations and visual style persist across every shot.
+						Open source, MIT.
+					</p>
+
+					<div data-reveal style={{ marginBottom: ".6rem" }}>
+						<Prompt path="~/openstory" cmd="./pipeline --watch" />
 					</div>
-					<div className="hero-text">
-						<h1>Tom Beckenham</h1>
-						<h2>Wallet Engineer @ Flow Blockchain</h2>
-						<p>
-							Senior technical lead with years of experience building complex
-							products both as a hands-on engineer and leader of engineering
-							teams.
-						</p>
+
+					<div className="pipe" data-reveal>
+						<div className="pipe-head">
+							<span>system / pipeline.ts</span>
+							<span>
+								runtime: <span className="cyan">cloudflare-workers</span>
+							</span>
+						</div>
+
+						<div className="pipe-grid">
+							<PipelineNode code="[01]" title="script">
+								<span className="accent">EXT. ROOFTOP</span>
+								<br />A woman steps to the edge.
+								<br />The city swells below.
+							</PipelineNode>
+							<PipelineNode code="[02]" title="scenes · llm">
+								01 · establishing wide
+								<br />02 · over-shoulder
+								<br />03 · close-up, tight
+							</PipelineNode>
+							<PipelineNode code="[03]" title="frames · fal">
+								frames=<span className="b">4</span> · seed=
+								<span className="b">42</span>
+								<br />character_id=<span className="b">a91</span>
+								<br />palette=<span className="accent">pink/cyan</span>
+							</PipelineNode>
+							<PipelineNode code="[04]" title="motion" last>
+								<div className="wave">
+									<i /><i /><i /><i /><i />
+								</div>
+								tc=<span className="accent">00:06:18</span>
+								<br />out=<span className="b">final.mp4</span>
+							</PipelineNode>
+						</div>
+
+						<div className="pipe-foot">
+							$ stack: <span>tanstack-start</span> · <span>bun</span> ·{" "}
+							<span>tanstack-ai</span> · <span>fal.ai</span>
+						</div>
+					</div>
+
+					<div className="cmd-row" data-reveal>
+						<a className="cmd-btn primary" href="https://openstory.so">
+							$ visit openstory.so
+						</a>
+						<a
+							className="cmd-btn"
+							href="https://github.com/openstory-so/openstory"
+						>
+							$ git clone openstory-so/openstory
+						</a>
 					</div>
 				</div>
 			</section>
 
-			{/* Flow Foundation Section */}
-			<section ref={flowRef} className="flow-section">
-				<div className="container">
-					<div className="section-header">
-						<div className="section-text">
-							<div className="section-title">
-								<img
-									src={flowLogo}
-									alt="Flow Blockchain"
-									className="company-logo flow-logo"
-								/>
-								<h2>Flow Blockchain</h2>
-							</div>
-							<div className="role">
-								Full Stack Engineer • November 2024 - Present
-							</div>
-							<p>
-								Leading engineering of the Flow Wallet Chrome Extension - the
-								primary gateway for consumers and traders to access the Flow
-								blockchain and Flow EVM.
-							</p>
-							<div className="project-links">
-								<a
-									href="https://github.com/onflow/FRW-Extension"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="project-link github"
-								>
-									<svg
-										className="project-icon"
-										viewBox="0 0 24 24"
-										fill="currentColor"
-									>
-										<path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-									</svg>
-									<span>View Extension Code</span>
-								</a>
-								<a
-									href="https://wallet.flow.com"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="project-link wallet"
-								>
-									<svg
-										className="project-icon"
-										viewBox="0 0 24 24"
-										fill="currentColor"
-									>
-										<path d="M12 0C7.589 0 4 3.589 4 8v8c0 4.411 3.589 8 8 8s8-3.589 8-8V8c0-4.411-3.589-8-8-8zm0 2c3.309 0 6 2.691 6 6v8c0 3.309-2.691 6-6 6s-6-2.691-6-6V8c0-3.309 2.691-6 6-6z" />
-										<circle cx="12" cy="8" r="3" />
-										<path d="M9 14h6v2H9z" />
-									</svg>
-									<span>Flow Wallet</span>
-								</a>
-							</div>
-						</div>
-						<div className="section-media">
-							<div className="flow-wallet-showcase">
-								<img
-									src={flowWallet}
-									alt="Flow Wallet"
-									className="wallet-image"
-								/>
-							</div>
-						</div>
-					</div>
+			{/* ─────────────── §02 Open source */}
+			<section ref={ossRef} className="block" id="oss">
+				<SectionBar
+					index="§02"
+					path="./open_source"
+					meta="contributions and tools"
+					right="2 entries"
+				/>
+				<div className="block-body">
+					<h2 className="h-sect" data-reveal>
+						$ ls <span className="pink">./open-source</span>
+					</h2>
 
-					<div className="achievements">
-						<div className="achievement">
-							<h4>Architectural Overhaul</h4>
+					<div className="oss">
+						<article className="oss-card" data-reveal>
+							<div className="row">
+								<span className="tag">library</span>
+								<span>pr #237 · merged</span>
+							</div>
+							<h3>
+								tanstack<span className="slash">/</span>ai
+							</h3>
 							<p>
-								Spearheaded major architectural improvements enhancing security
-								and scalability, reducing critical issues by over 95%
+								Authored the{" "}
+								<a href="https://github.com/TanStack/ai/pull/237">
+									Fal.ai adapter
+								</a>{" "}
+								for image and video generation. Also: NanoBanana Pro 2 support,
+								an OpenRouter SDK upgrade with structured output, and assorted
+								fixes.
 							</p>
-						</div>
-						<div className="achievement">
-							<h4>Modern Testing Strategy</h4>
+							<a href="https://github.com/TanStack/ai">
+								→ github.com/TanStack/ai
+							</a>
+						</article>
+						<article className="oss-card" data-reveal>
+							<div className="row">
+								<span className="tag">tooling</span>
+								<span>personal</span>
+							</div>
+							<h3>
+								tom<span className="slash">·</span>dotfiles
+							</h3>
 							<p>
-								Implemented end-to-end testing with Vitest and Playwright,
-								establishing robust quality assurance
+								My setup for multi-agent Claude Code workflows with git
+								worktrees. Parallel agents, scoped permissions, tuned hooks.
 							</p>
-						</div>
-						<div className="achievement">
-							<h4>CI/CD Pipeline</h4>
-							<p>
-								Automated development and release processes with GitHub Actions,
-								streamlining team productivity
-							</p>
-						</div>
-						<div className="achievement">
-							<h4>State Management Refactor</h4>
-							<p>
-								Unified application state management and data flow across the
-								entire wallet ecosystem
-							</p>
-						</div>
+							<a href="https://github.com/tombeckenham/dotfiles">
+								→ github.com/tombeckenham/dotfiles
+							</a>
+						</article>
 					</div>
 				</div>
 			</section>
 
-			{/* Comma Section */}
-			<section ref={commaRef} className="comma-section">
-				<div className="container">
-					<div className="section-header">
-						<div className="section-text">
-							<div className="section-title">
-								<img
-									src={commaLogo}
-									alt="Comma Payments"
-									className="company-logo comma-logo"
-								/>
-								<h2>Comma Payments</h2>
+			{/* ─────────────── §03 Writing */}
+			<section ref={writingRef} className="block" id="writing">
+				<SectionBar
+					index="§03"
+					path="./writing"
+					meta="essays & dispatches"
+					right="2 entries · medium"
+				/>
+				<div className="block-body">
+					<h2 className="h-sect" data-reveal>
+						$ tail -f <span className="pink">./writing</span>
+					</h2>
+
+					<ul className="writes">
+						<li data-reveal>
+							<a href="https://medium.com/@tombeckenham/rewriting-whole-apps-with-ai-69e879ad5f9c">
+								<span className="num">01</span>
+								<span>
+									<span className="ttl">Rewriting whole apps with AI</span>
+									<span className="desc">
+										Using Claude Code to rapidly rebuild a legacy frontend —
+										where the speedups come from, and where they don&rsquo;t.
+									</span>
+								</span>
+								<span className="meta">→ medium</span>
+							</a>
+						</li>
+						<li data-reveal>
+							<a href="https://medium.com/@tombeckenham/sustainable-ai-business-models-9aa5baa527b0">
+								<span className="num">02</span>
+								<span>
+									<span className="ttl">Sustainable AI business models</span>
+									<span className="desc">
+										Lessons from fintech on pricing, margin, and building AI
+										products that pay for themselves instead of their infra
+										bill.
+									</span>
+								</span>
+								<span className="meta">→ medium</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</section>
+
+			{/* ─────────────── §04 Previously */}
+			<section ref={prevRef} className="block" id="prev">
+				<SectionBar
+					index="§04"
+					path="./previously"
+					meta="2006 — 2024"
+					right="3 entries"
+				/>
+				<div className="block-body">
+					<h2 className="h-sect" data-reveal>
+						$ history --years
+					</h2>
+
+					<div className="dossier">
+						<article className="dossier-row" data-reveal>
+							<div className="d-years">
+								2024<small>eng lead</small>
 							</div>
-							<div className="role">
-								Founder & CEO • August 2019 - March 2023
+							<div className="d-main">
+								<h3>flow blockchain</h3>
+								<div className="role">
+									flow wallet · chrome extension
+								</div>
+								<p>
+									Architectural overhaul, CI/CD, state-management refactor, and
+									end-to-end test coverage on the primary consumer gateway to
+									Flow and Flow EVM. Source:{" "}
+									<a href="https://github.com/onflow/FRW-Extension">
+										onflow/FRW-Extension
+									</a>
+									.
+								</p>
 							</div>
-							<p>
-								Built Comma with the mission to "end business banking bulls***"
-								by pioneering open banking bulk payments in the UK.
-							</p>
-						</div>
-						<div className="section-media">
-							<div className="comma-showcase">
-								<div className="video-container">
-									<iframe
-										src="https://www.youtube.com/embed/7-6TAxEXlsA?controls=1&modestbranding=1&rel=0"
-										title="Comma Payments Demo"
-										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-										allowFullScreen
-										className="comma-video"
-									></iframe>
+							<div className="d-side">
+								<div className="kv">
+									<span className="k">stack</span>
+									<span className="v">react · ts · evm</span>
+								</div>
+								<div className="kv">
+									<span className="k">role</span>
+									<span className="v">eng lead</span>
+								</div>
+								<div className="kv">
+									<span className="k">status</span>
+									<span className="v green">shipped</span>
 								</div>
 							</div>
-						</div>
-					</div>
+						</article>
 
-					<div className="achievements">
-						<div className="achievement">
-							<h4>Open Banking Pioneer</h4>
-							<p>
-								First to market with bulk payment solutions targeting
-								accounting, accounts payable, and payroll sectors
-							</p>
+						<article className="dossier-row" data-reveal>
+							<div className="d-years">
+								2019<small>– 2023 · founder</small>
+							</div>
+							<div className="d-main">
+								<h3>comma payments</h3>
+								<div className="role">
+									open banking · bulk payments · uk
+								</div>
+								<p>
+									Pioneered open-banking bulk payments in the UK, processing
+									£18M+/month in payment volume through the platform. Acquired by
+									Weavr (Paystratus Group) in March 2023.
+								</p>
+							</div>
+							<div className="d-side">
+								<div className="kv">
+									<span className="k">volume</span>
+									<span className="v">£18m+ /mo processed</span>
+								</div>
+								<div className="kv">
+									<span className="k">exit</span>
+									<span className="v green">acquired 2023</span>
+								</div>
+								<div className="kv">
+									<span className="k">market</span>
+									<span className="v">uk · open banking</span>
+								</div>
+							</div>
+						</article>
+
+						<article className="dossier-row" data-reveal>
+							<div className="d-years">
+								2006<small>– 2017 · founder</small>
+							</div>
+							<div className="d-main">
+								<h3>specle</h3>
+								<div className="role">
+									ad-spec database · publishers &amp; agencies
+								</div>
+								<p>
+									Central ad-spec database used by The Guardian, Daily Mail, and
+									Condé Nast. Cash-positive within three years; still operating
+									today.
+								</p>
+							</div>
+							<div className="d-side">
+								<div className="kv">
+									<span className="k">cash+</span>
+									<span className="v">in 3 years</span>
+								</div>
+								<div className="kv">
+									<span className="k">status</span>
+									<span className="v green">live · 2026</span>
+								</div>
+								<div className="kv">
+									<span className="k">market</span>
+									<span className="v">uk publishers</span>
+								</div>
+							</div>
+						</article>
+					</div>
+				</div>
+			</section>
+
+			{/* ─────────────── §05 Contact */}
+			<section ref={contactRef} className="block" id="contact">
+				<SectionBar
+					index="§05"
+					path="./contact"
+					meta="links & availability"
+					right={<><span className="green">●</span> open to work</>}
+				/>
+				<div className="block-body">
+					<h2 className="h-sect" data-reveal>
+						$ whoami<span className="cursor cyan">█</span>
+					</h2>
+					<p className="deck" data-reveal>
+						Open to advisory, technical leadership, and high-signal
+						collaboration on AI video, agentic systems, and fintech
+						infrastructure.
+					</p>
+
+					<div className="contact" data-reveal>
+						<div className="kv">
+							<span className="k">code</span>
+							<a href="https://github.com/tombeckenham">
+								github.com/tombeckenham
+							</a>
 						</div>
-						<div className="achievement">
-							<h4>Venture Success</h4>
-							<p>
-								Raised funding from top-tier global venture funds, becoming a
-								talent and investment magnet
-							</p>
+						<div className="kv">
+							<span className="k">social</span>
+							<a href="https://x.com/tombeckenham">x.com/tombeckenham</a>
 						</div>
-						<div className="achievement">
-							<h4>Strategic Acquisition</h4>
-							<p>
-								Successfully acquired by Weavr in March 2023, with technology
-								integrated into their embedded payments platform
-							</p>
-						</div>
-						<div className="achievement">
-							<h4>Market Impact</h4>
-							<p>
-								Solved critical pain points in business payments, reducing
-								manual entry and late supplier payments
-							</p>
+						<div className="kv">
+							<span className="k">linkedin</span>
+							<a href="https://www.linkedin.com/in/tombeckenham/">
+								linkedin.com/in/tombeckenham
+							</a>
 						</div>
 					</div>
 				</div>
 			</section>
 
-			{/* Social Links Section */}
-			<section ref={socialRef} className="social-section">
-				<div className="container">
-					<h2>Connect</h2>
-					<div className="social-links">
-						<a
-							href="https://github.com/tombeckenham"
-							target="_blank"
-							rel="noopener noreferrer"
-							className="social-link github"
-						>
-							<svg
-								className="social-icon"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-							</svg>
-							<span>GitHub</span>
-						</a>
-						<a
-							href="https://www.linkedin.com/in/tombeckenham/"
-							target="_blank"
-							rel="noopener noreferrer"
-							className="social-link linkedin"
-						>
-							<svg
-								className="social-icon"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-							</svg>
-							<span>LinkedIn</span>
-						</a>
-						<a
-							href="https://x.com/tombeckenham"
-							target="_blank"
-							rel="noopener noreferrer"
-							className="social-link twitter"
-						>
-							<svg
-								className="social-icon"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-							</svg>
-							<span>X</span>
-						</a>
-					</div>
-					<div className="contact">
-						<p>Sydney, Australia</p>
-					</div>
-				</div>
-			</section>
+			<footer className="statusbar">
+				<span>
+					<span className="green">●</span> ONLINE
+				</span>
+				<span>
+					SESSION{" "}
+					<span ref={uptimeRef} className="cyan">
+						00:00
+					</span>
+				</span>
+				<span>
+					<span ref={clockRef} className="pink">
+						00:00:00 AEST
+					</span>
+				</span>
+				<span>
+					CPU{" "}
+					<span className="bar">
+						<i /><i /><i /><i /><i />
+					</span>{" "}
+					<span className="cyan">38%</span>
+				</span>
+				<span style={{ justifyContent: "flex-end" }}>
+					© 2026 TOM BECKENHAM · SYDNEY
+				</span>
+			</footer>
+		</div>
+	);
+}
+
+/* ───────────── helpers ───────────── */
+
+function Prompt({
+	path,
+	cmd,
+	reveal,
+}: {
+	path: string;
+	cmd: string;
+	reveal?: boolean;
+}) {
+	return (
+		<div className="prompt" data-reveal={reveal ? "" : undefined}>
+			<b className="user">tom</b>
+			<span className="muted">@</span>
+			<b className="host">home</b>
+			<span className="muted">:</span>
+			<b className="path">{path}</b>
+			<span className="muted">$</span> <em>{cmd}</em>
+		</div>
+	);
+}
+
+function SectionBar({
+	index,
+	path,
+	meta,
+	right,
+}: {
+	index: string;
+	path: string;
+	meta: string;
+	right: React.ReactNode;
+}) {
+	return (
+		<div className="section-bar">
+			<span>
+				<b>{index}</b> &nbsp; {path}
+			</span>
+			<span className="muted center">{meta}</span>
+			<span className="right">{right}</span>
+		</div>
+	);
+}
+
+function PipelineNode({
+	code,
+	title,
+	children,
+	last,
+}: {
+	code: string;
+	title: string;
+	children: React.ReactNode;
+	last?: boolean;
+}) {
+	return (
+		<div className="pnode">
+			<div className="pnode-head">
+				<span>{code}</span>
+				<span>{title}</span>
+				<span className="led" />
+			</div>
+			<div className="pnode-body">{children}</div>
+			{!last && <span className="pnode-arrow">▶</span>}
 		</div>
 	);
 }
