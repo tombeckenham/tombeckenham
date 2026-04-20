@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Variants — Tom Beckenham</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Big+Shoulders+Display:wght@800&family=Bodoni+Moda:ital,wght@1,700&family=VT323&display=swap" rel="stylesheet" />
+<style>
+:root{
+	--bg:#0c0d12;
+	--bg-lift:#15171f;
+	--text:#e8eaf2;
+	--text-mid:#8d92a8;
+	--text-dim:#4d5266;
+	--rule:#22253a;
+	--rule-bright:#363b58;
+	--pink:#ff3da4;
+	--cyan:#5cd5ff;
+	--mint:#4dffaa;
+	--inkblue:#7c8cf0;
+	--mono:"JetBrains Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg);color:var(--text);min-height:100vh;font-family:"Inter",sans-serif;-webkit-font-smoothing:antialiased}
+body{
+	background:
+		radial-gradient(ellipse 800px 500px at 0% 0%, rgba(255,61,164,.06), transparent 60%),
+		radial-gradient(ellipse 800px 500px at 100% 100%, rgba(92,213,255,.06), transparent 60%),
+		var(--bg);
+}
+a{color:inherit;text-decoration:none}
+
+.wrap{max-width:1100px;margin:0 auto;padding:5vh 5vw}
+.head{
+	display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:end;
+	padding-bottom:1.4rem;border-bottom:1px solid var(--rule);margin-bottom:3.5rem;
+}
+.head h1{font-size:1.4rem;font-weight:600;letter-spacing:-.005em}
+.head h1 .pink{color:var(--pink)}
+.head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-mid);text-align:right}
+
+.intro{font-size:1.1rem;line-height:1.55;color:var(--text-mid);max-width:60ch;margin-bottom:3.5rem}
+
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem}
+@media (max-width:1000px){.grid{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.grid{grid-template-columns:1fr}}
+
+.card{
+	border:1px solid var(--rule-bright);background:var(--bg-lift);
+	display:flex;flex-direction:column;overflow:hidden;
+	transition:transform .25s, border-color .25s, box-shadow .25s;
+}
+.card:hover{transform:translateY(-4px)}
+
+.card .preview{
+	aspect-ratio:4 / 3;position:relative;overflow:hidden;
+	display:flex;align-items:center;justify-content:center;padding:1rem;
+	border-bottom:1px solid var(--rule-bright);
+}
+.card .meta{
+	padding:1rem 1.1rem 1.2rem;display:flex;flex-direction:column;gap:.5rem;flex:1;
+}
+.card .label{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim)}
+.card h3{font-size:1.05rem;font-weight:600;letter-spacing:-.005em;color:var(--text)}
+.card p{font-size:.9rem;line-height:1.5;color:var(--text-mid);flex:1}
+.card .palette{display:flex;gap:4px;margin-top:.4rem}
+.card .palette span{width:14px;height:14px;border:1px solid rgba(255,255,255,.1)}
+
+/* card 0 — current site */
+.card-current{border-color:#2a2e3f}
+.card-current:hover{border-color:#e8937a;box-shadow:0 12px 36px rgba(232,147,122,.12)}
+.card-current .preview{
+	background:
+		linear-gradient(to right, rgba(31,34,48,.6) 1px, transparent 1px) 0 0/40px 100%,
+		linear-gradient(to bottom, rgba(31,34,48,.6) 1px, transparent 1px) 0 0/100% 40px,
+		radial-gradient(ellipse at 50% 30%, rgba(232,147,122,.1) 0%, transparent 60%),
+		#0b0c0f;
+}
+.card-current .preview span{font-family:"Instrument Serif",serif;font-size:2.4rem;color:#ece9e2;font-style:italic}
+.card-current .preview span em{color:#e8937a}
+
+/* editorial preview */
+.card-editorial{border-color:#3a2a18;background:#1a1308}
+.card-editorial:hover{border-color:var(--pink);box-shadow:0 12px 36px rgba(255,61,164,.18)}
+.card-editorial .preview{
+	background:
+		radial-gradient(ellipse 200px 100px at 30% 30%, rgba(224,39,126,.18), transparent 60%),
+		radial-gradient(ellipse 200px 100px at 70% 70%, rgba(28,60,138,.15), transparent 60%),
+		#f1ead8;
+	color:#16110b;
+}
+.card-editorial .preview .mast{font-family:"Bodoni Moda",serif;font-style:italic;font-weight:700;font-size:3.2rem;line-height:.85;letter-spacing:-.04em;color:#16110b;text-align:center}
+.card-editorial .preview .mast .accent{color:#e0277e}
+.card-editorial .preview small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#4a3f2f;margin-top:.5rem;text-align:center}
+
+/* terminal preview */
+.card-terminal{background:#0a0816}
+.card-terminal:hover{border-color:var(--pink);box-shadow:0 12px 36px rgba(255,61,164,.22)}
+.card-terminal .preview{
+	background:#0a0816;
+	background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.18) 3px,transparent 4px);
+}
+.card-terminal .preview pre{
+	font-family:"VT323",monospace;color:#ff7ad0;font-size:1rem;line-height:1;
+	text-shadow:0 0 8px #ff3da4, 0 0 18px rgba(255,61,164,.5);text-align:center;
+}
+.card-terminal .preview small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#5cd5ff;margin-top:.7rem;text-shadow:0 0 4px #5cd5ff;text-align:center}
+
+/* cinematic preview */
+.card-cinematic{background:#06080d}
+.card-cinematic:hover{border-color:var(--cyan);box-shadow:0 12px 36px rgba(92,213,255,.18)}
+.card-cinematic .preview{
+	position:relative;background:
+		radial-gradient(ellipse at 30% 30%, rgba(255,61,164,.22), transparent 50%),
+		radial-gradient(ellipse at 75% 70%, rgba(92,213,255,.18), transparent 50%),
+		linear-gradient(135deg, #0a0d18 0%, #1a1428 50%, #061018 100%);
+}
+.card-cinematic .preview::before, .card-cinematic .preview::after{
+	content:"";position:absolute;left:0;right:0;height:18px;background:#03050a;
+}
+.card-cinematic .preview::before{top:0}
+.card-cinematic .preview::after{bottom:0}
+.card-cinematic .preview .title{
+	font-family:"Big Shoulders Display",sans-serif;font-weight:800;
+	font-size:2.4rem;line-height:.85;text-transform:uppercase;color:#f0f4ff;text-align:center;
+	font-stretch:75%;
+}
+.card-cinematic .preview .title .magenta{color:#ff3da4;text-shadow:0 0 14px rgba(255,61,164,.6)}
+.card-cinematic .preview .title .em{font-style:italic;font-weight:600}
+.card-cinematic .preview small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:#8d99b3;margin-top:.6rem;text-align:center}
+
+.foot{
+	margin-top:4rem;padding-top:1.4rem;border-top:1px solid var(--rule);
+	font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);
+	display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.foot a{color:var(--cyan);border-bottom:1px solid rgba(92,213,255,.3)}
+.foot a:hover{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="wrap">
+	<header class="head">
+		<h1>Site variants <span class="pink">·</span> alternate look &amp; feel</h1>
+		<div class="meta">3 directions · drafted 2026</div>
+	</header>
+
+	<p class="intro">
+		Three different aesthetic directions for the personal site, each carrying the same content. Click through to preview at full fidelity. Palette weighted toward blues, greens and pinks per your preference.
+	</p>
+
+	<div class="grid">
+		<a class="card card-current" href="/">
+			<div class="preview"><span>Tom <em>B.</em></span></div>
+			<div class="meta">
+				<span class="label">00 · Current</span>
+				<h3>Engineer's notebook</h3>
+				<p>The current site — graphite blueprint, peach accent, Instrument Serif + JetBrains Mono.</p>
+				<div class="palette"><span style="background:#0b0c0f"></span><span style="background:#ece9e2"></span><span style="background:#e8937a"></span><span style="background:#6cc6d4"></span></div>
+			</div>
+		</a>
+
+		<a class="card card-editorial" href="/variants/editorial.html">
+			<div class="preview">
+				<div>
+					<div class="mast">Tom <span class="accent">B.</span></div>
+					<small>Founder · N°01 · MMXXVI</small>
+				</div>
+			</div>
+			<div class="meta">
+				<span class="label">01 · Editorial</span>
+				<h3>Print magazine</h3>
+				<p>Cream paper, ink, hot pink accent. Bodoni didone display, drop caps, pull quotes, folio markers, magazine layout.</p>
+				<div class="palette"><span style="background:#f1ead8"></span><span style="background:#16110b"></span><span style="background:#e0277e"></span><span style="background:#1c3c8a"></span></div>
+			</div>
+		</a>
+
+		<a class="card card-terminal" href="/variants/terminal.html">
+			<div class="preview">
+				<div>
+<pre>████ ██████  ███   ███     ██████
+ ██  ██  ██  ████ ████     ██  ██
+ ██  ██  ██  ██ ███ ██     █████
+ ██  ██████  ██  █  ██ ██  ██  ██</pre>
+					<small>tom@home:~$</small>
+				</div>
+			</div>
+			<div class="meta">
+				<span class="label">02 · Terminal</span>
+				<h3>Synthwave CRT</h3>
+				<p>Deep-violet phosphor terminal. Hot pink primary, electric cyan secondary, mint-green status. Scanlines, blinking cursor, ASCII art.</p>
+				<div class="palette"><span style="background:#0a0816"></span><span style="background:#ff3da4"></span><span style="background:#5cd5ff"></span><span style="background:#3aff8f"></span></div>
+			</div>
+		</a>
+
+		<a class="card card-cinematic" href="/variants/cinematic.html">
+			<div class="preview">
+				<div>
+					<div class="title">Tom <span class="magenta">B.</span><br><span class="em">Engineer.</span></div>
+					<small>Reel 01 · 2026</small>
+				</div>
+			</div>
+			<div class="meta">
+				<span class="label">03 · Cinematic</span>
+				<h3>Reel / film print</h3>
+				<p>Letterboxed deep-navy, magenta + cyan grade, mint REC dot. Big Shoulders condensed display. ACT-numbered sections, sprocket-hole filmstrips.</p>
+				<div class="palette"><span style="background:#06080d"></span><span style="background:#ff3da4"></span><span style="background:#5cd5ff"></span><span style="background:#4dffaa"></span></div>
+			</div>
+		</a>
+	</div>
+
+	<div class="foot">
+		<span>Each variant is self-contained · same content · pick a direction or remix</span>
+		<span><a href="/">← back to current site</a></span>
+	</div>
+</div>
+</body>
+</html>

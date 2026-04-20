@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OPENSTORY — A film by Tom Beckenham</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+	--bg:#06080d;
+	--bg-deep:#03050a;
+	--bg-lift:#0c1018;
+	--bg-paper:#11151f;
+	--magenta:#ff3da4;
+	--magenta-deep:#c61f7a;
+	--magenta-soft:rgba(255,61,164,.10);
+	--cyan:#5cd5ff;
+	--cyan-deep:#2596c4;
+	--cyan-soft:rgba(92,213,255,.10);
+	--mint:#4dffaa;
+	--mint-deep:#1ec07a;
+	--text:#f0f4ff;
+	--text-mid:#8d99b3;
+	--text-dim:#4a5571;
+	--rule:#1d2334;
+	--rule-bright:#2c354d;
+	--display:"Big Shoulders Display", "Oswald", "Helvetica Neue Condensed", sans-serif;
+	--sans:"Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+	--mono:"JetBrains Mono", ui-monospace, monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+	background:var(--bg);
+	color:var(--text);
+	overflow-x:hidden;
+	min-height:100vh;
+}
+body{
+	font-family:var(--sans);
+	font-size:15.5px;
+	line-height:1.55;
+	-webkit-font-smoothing:antialiased;
+	font-weight:400;
+}
+::selection{background:var(--magenta);color:var(--bg-deep)}
+
+a{color:inherit;text-decoration:none}
+
+/* ─── Atmospheric overlays */
+/* film grain */
+body::before{
+	content:"";position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.55;
+	background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='2' seed='5'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .25 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+	mix-blend-mode:overlay;
+}
+/* edge vignette + magenta/cyan light leaks */
+body::after{
+	content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
+	background:
+		radial-gradient(ellipse 50% 60% at 0% 30%, rgba(255,61,164,.10) 0%, transparent 60%),
+		radial-gradient(ellipse 50% 60% at 100% 70%, rgba(92,213,255,.10) 0%, transparent 60%),
+		radial-gradient(ellipse 130% 100% at 50% 50%, transparent 50%, rgba(0,0,0,.7) 100%);
+}
+
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+
+/* ─── Top: timecode strip */
+.timecode-bar{
+	position:sticky;top:0;z-index:50;
+	display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+	padding:.5rem 5vw;
+	background:rgba(3,5,10,.85);
+	backdrop-filter:blur(10px);
+	-webkit-backdrop-filter:blur(10px);
+	border-bottom:1px solid var(--rule);
+	font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-mid);
+}
+.tc-left{display:flex;align-items:center;gap:.7rem}
+.tc-rec{
+	display:inline-flex;align-items:center;gap:.45rem;color:var(--magenta);
+	border:1px solid var(--magenta);padding:1px 7px;letter-spacing:.2em;font-weight:500;
+}
+.tc-rec .dot{width:7px;height:7px;border-radius:50%;background:var(--magenta);box-shadow:0 0 8px var(--magenta);animation:rec-blink 1.6s ease-in-out infinite}
+@keyframes rec-blink{0%,100%{opacity:1}50%{opacity:.35}}
+.tc-center{color:var(--cyan);text-shadow:0 0 6px rgba(92,213,255,.5);letter-spacing:.24em;font-weight:500}
+.tc-right{text-align:right;color:var(--text-mid)}
+.tc-right b{color:var(--mint);font-weight:500;letter-spacing:.2em;text-shadow:0 0 5px var(--mint)}
+
+/* ─── Scrubber timeline */
+.scrubber{
+	position:sticky;top:32px;z-index:49;
+	display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1rem;
+	padding:.4rem 5vw .5rem;background:rgba(3,5,10,.85);
+	backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+	border-bottom:1px solid var(--rule);
+	font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);
+}
+.track{
+	position:relative;height:18px;display:flex;align-items:center;
+}
+.track::before{
+	content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--rule-bright);
+}
+.track ul{list-style:none;display:flex;justify-content:space-between;width:100%;position:relative;z-index:1}
+.track a{
+	display:flex;align-items:center;gap:.4em;padding:0 .5rem;background:var(--bg);
+	color:var(--text-mid);font-size:10px;letter-spacing:.18em;
+	border:1px solid var(--rule-bright);border-radius:0;line-height:1;height:18px;
+}
+.track a .marker{width:4px;height:4px;background:var(--cyan);box-shadow:0 0 5px var(--cyan)}
+.track a:hover{color:var(--cyan-bright);border-color:var(--cyan)}
+.track a.active{color:var(--magenta);border-color:var(--magenta);background:var(--bg-deep)}
+.track a.active .marker{background:var(--magenta);box-shadow:0 0 6px var(--magenta)}
+
+/* ─── Hero / Title card */
+.reel{
+	position:relative;
+	max-width:1280px;margin:3rem auto 4rem;padding:0 5vw;z-index:2;
+}
+.frame{
+	position:relative;
+	aspect-ratio:21 / 9;
+	background:
+		radial-gradient(ellipse at 30% 30%, rgba(255,61,164,.18) 0%, transparent 50%),
+		radial-gradient(ellipse at 75% 70%, rgba(92,213,255,.16) 0%, transparent 55%),
+		linear-gradient(135deg, #0a0d18 0%, #1a1428 50%, #061018 100%);
+	border:1px solid var(--rule-bright);
+	overflow:hidden;
+	display:flex;flex-direction:column;justify-content:flex-end;
+	padding:clamp(1.4rem, 3vw, 2.6rem);
+}
+/* letterbox bars */
+.frame::before, .frame::after{
+	content:"";position:absolute;left:0;right:0;height:max(2.4vw, 22px);background:var(--bg-deep);z-index:3;
+}
+.frame::before{top:0}
+.frame::after{bottom:0}
+/* corner crop marks */
+.crop{position:absolute;width:18px;height:18px;border:1px solid var(--text-mid);z-index:4}
+.crop.tl{top:max(2.4vw, 22px);left:0;border-right:none;border-bottom:none;transform:translate(8px,8px)}
+.crop.tr{top:max(2.4vw, 22px);right:0;border-left:none;border-bottom:none;transform:translate(-8px,8px)}
+.crop.bl{bottom:max(2.4vw, 22px);left:0;border-right:none;border-top:none;transform:translate(8px,-8px)}
+.crop.br{bottom:max(2.4vw, 22px);right:0;border-left:none;border-top:none;transform:translate(-8px,-8px)}
+
+.slate{
+	position:absolute;left:max(2.4vw, 22px);top:max(2.4vw, 22px);right:auto;
+	display:flex;gap:.6rem;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+	color:var(--text-mid);z-index:5;padding:.6rem 0 0 .6rem;
+}
+.slate .pill{border:1px solid var(--magenta);color:var(--magenta);padding:2px 7px;letter-spacing:.22em;font-weight:500}
+.slate .pill.cyan{border-color:var(--cyan);color:var(--cyan)}
+
+.tc-corner{
+	position:absolute;right:max(2.4vw, 22px);top:max(2.4vw, 22px);
+	font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+	color:var(--cyan);text-shadow:0 0 6px rgba(92,213,255,.4);z-index:5;padding:.6rem .6rem 0 0;text-align:right;
+}
+.tc-corner b{color:var(--text);font-weight:500;display:block;font-family:var(--mono);font-size:14px;letter-spacing:.16em;text-shadow:none;margin-top:.2rem}
+
+.title{
+	font-family:var(--display);
+	font-weight:800;
+	font-size:clamp(3.4rem, 9.5vw, 9.5rem);
+	line-height:.85;
+	letter-spacing:-.005em;
+	text-transform:uppercase;
+	color:var(--text);
+	z-index:5;
+	position:relative;
+	max-width:18ch;
+	font-stretch:75%;
+	mix-blend-mode:screen;
+}
+.title .magenta{color:var(--magenta);text-shadow:0 0 26px rgba(255,61,164,.55)}
+.title .cyan{color:var(--cyan);text-shadow:0 0 26px rgba(92,213,255,.55)}
+.title .em{font-style:italic;font-family:var(--display);font-weight:600;}
+
+.subtitle{
+	font-family:var(--mono);font-size:11.5px;letter-spacing:.32em;text-transform:uppercase;
+	color:var(--text-mid);margin-top:1.4rem;z-index:5;position:relative;
+}
+.subtitle b{color:var(--mint);font-weight:500;letter-spacing:.32em;text-shadow:0 0 5px var(--mint)}
+
+/* ─── Below-frame credits */
+.credits{
+	display:grid;grid-template-columns:1fr 1.4fr;gap:3rem;margin-top:2.2rem;align-items:start;padding:0 .4rem;
+}
+.credits-block h2{
+	font-family:var(--display);font-weight:800;font-size:clamp(1.8rem,3.4vw,2.8rem);
+	line-height:.95;letter-spacing:-.01em;text-transform:uppercase;
+	color:var(--text);margin-bottom:.8rem;
+}
+.credits-block h2 .magenta{color:var(--magenta)}
+.credits-block h2 .em{font-style:italic;font-weight:600}
+.credits-block p{font-size:1.05rem;line-height:1.6;color:var(--text-mid);max-width:62ch}
+.credits-block p a{color:var(--magenta);border-bottom:1px solid var(--magenta-deep)}
+.credits-block p a:hover{color:var(--cyan);border-color:var(--cyan)}
+
+.credits-roll{
+	border-left:1px solid var(--rule-bright);padding-left:2rem;
+	display:flex;flex-direction:column;gap:.7rem;
+}
+.cr-row{
+	display:grid;grid-template-columns:120px 1fr;gap:1rem;align-items:baseline;
+	padding-bottom:.7rem;border-bottom:1px solid var(--rule);
+}
+.cr-row:last-child{border-bottom:none}
+.cr-row b{
+	font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+	color:var(--text-dim);font-weight:500;
+}
+.cr-row span{color:var(--text);font-size:13.5px}
+.cr-row span a{color:var(--cyan);border-bottom:1px solid var(--cyan-deep)}
+
+.cta-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.6rem}
+.cta{
+	display:inline-flex;align-items:center;gap:.6rem;
+	font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+	padding:.85rem 1.2rem;border:1px solid var(--rule-bright);color:var(--text);background:transparent;
+	transition:background .2s, color .2s, border-color .2s;
+}
+.cta:hover{border-color:var(--cyan);color:var(--cyan)}
+.cta.primary{
+	background:var(--magenta);border-color:var(--magenta);color:var(--bg-deep);font-weight:500;
+	box-shadow:0 0 0 1px var(--magenta), 0 8px 28px rgba(255,61,164,.32);
+}
+.cta.primary:hover{background:var(--cyan);border-color:var(--cyan);color:var(--bg-deep);box-shadow:0 0 0 1px var(--cyan), 0 8px 28px rgba(92,213,255,.32)}
+
+/* ─── Cut-to transition */
+.cut{
+	display:grid;grid-template-columns:1fr auto 1fr;gap:1.2rem;align-items:center;
+	max-width:1280px;margin:5rem auto 0;padding:0 5vw;position:relative;z-index:2;
+}
+.cut::before, .cut::after{content:"";display:block;height:1px;background:var(--rule-bright)}
+.cut span{
+	font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;
+	color:var(--magenta);text-shadow:0 0 5px rgba(255,61,164,.4);
+}
+
+/* ─── Section / Act */
+.act{
+	max-width:1280px;margin:0 auto;padding:3.5rem 5vw 4rem;position:relative;z-index:2;
+}
+.act-head{
+	display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:1.5rem;
+	border-bottom:1px solid var(--rule-bright);padding-bottom:1.2rem;margin-bottom:2.4rem;
+}
+.act-id{
+	font-family:var(--display);font-weight:900;font-style:italic;
+	font-size:clamp(3.4rem,7vw,6rem);line-height:.85;
+	color:var(--magenta);letter-spacing:-.01em;text-transform:uppercase;
+	text-shadow:0 0 24px rgba(255,61,164,.35);
+}
+.act-id small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--text-dim);margin-top:.4rem;font-style:normal;font-weight:500;text-shadow:none}
+.act-title{
+	font-family:var(--display);font-weight:700;font-size:clamp(1.8rem,3vw,2.6rem);
+	letter-spacing:-.005em;text-transform:uppercase;color:var(--text);line-height:.95;
+}
+.act-meta{
+	font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-mid);
+	text-align:right;align-self:end;
+}
+
+.act-h1{
+	font-family:var(--display);font-weight:800;
+	font-size:clamp(2.4rem,5.5vw,4.6rem);line-height:.92;letter-spacing:-.012em;
+	text-transform:uppercase;color:var(--text);margin-bottom:1rem;text-wrap:balance;max-width:22ch;
+}
+.act-h1 .magenta{color:var(--magenta);text-shadow:0 0 22px rgba(255,61,164,.4)}
+.act-h1 .cyan{color:var(--cyan);text-shadow:0 0 22px rgba(92,213,255,.4)}
+.act-h1 .em{font-style:italic;font-weight:600}
+
+.act-deck{font-size:1.1rem;line-height:1.55;color:var(--text-mid);max-width:60ch;margin-bottom:2rem}
+.act-deck a{color:var(--cyan);border-bottom:1px solid var(--cyan-deep)}
+
+/* ─── Storyboard */
+.storyboard{
+	display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;align-items:stretch;margin:2rem 0;
+}
+.shot{
+	border:1px solid var(--rule-bright);background:var(--bg-lift);
+	display:flex;flex-direction:column;position:relative;
+	transition:transform .25s, border-color .25s;
+}
+.shot:hover{transform:translateY(-3px);border-color:var(--magenta)}
+.shot-frame{
+	aspect-ratio:16 / 9;
+	position:relative;overflow:hidden;
+	background:#000;
+	border-bottom:1px solid var(--rule-bright);
+}
+.shot-frame .mark{
+	position:absolute;top:.4rem;left:.5rem;font-family:var(--mono);font-size:10px;
+	letter-spacing:.2em;color:var(--text);text-shadow:0 0 4px rgba(0,0,0,.8);
+	background:rgba(0,0,0,.6);padding:1px 6px;z-index:2;
+}
+.shot-frame .tc{
+	position:absolute;bottom:.4rem;right:.5rem;font-family:var(--mono);font-size:10px;
+	letter-spacing:.16em;color:var(--cyan);text-shadow:0 0 4px rgba(0,0,0,.8);
+	background:rgba(0,0,0,.6);padding:1px 6px;z-index:2;
+}
+/* shot 1: magenta wide silhouette */
+.s1{background:
+	radial-gradient(circle at 50% 75%, transparent 14%, rgba(0,0,0,.7) 60%),
+	linear-gradient(180deg, #2a1638 0%, #4a1c44 60%, #0d0716 100%);}
+.s1::before{content:"";position:absolute;left:50%;bottom:0;width:30%;height:55%;background:linear-gradient(180deg, #ff3da4 0%, #c61f7a 100%);clip-path:polygon(40% 0, 60% 0, 70% 100%, 30% 100%);transform:translateX(-50%);opacity:.85}
+/* shot 2: cyan over-shoulder */
+.s2{background:linear-gradient(135deg, #5cd5ff 0%, #2a4a72 50%, #0a1422 100%);}
+.s2::before{content:"";position:absolute;right:18%;top:25%;width:24%;height:55%;background:radial-gradient(circle, #c9e6ff 30%, #2a4a72 100%);border-radius:50% 50% 45% 45%;opacity:.9}
+.s2::after{content:"";position:absolute;left:8%;bottom:0;width:50%;height:60%;background:#0a1422;clip-path:polygon(0 100%, 0 30%, 60% 50%, 100% 80%, 100% 100%);}
+/* shot 3: tight close on magenta */
+.s3{background:radial-gradient(ellipse at 60% 45%, #ffd1e8 0%, #ff3da4 25%, #2a0d22 100%);}
+.s3::before{content:"";position:absolute;inset:32% 30% 22% 30%;background:radial-gradient(circle, transparent 38%, #2a0d22 75%);}
+/* shot 4: motion graph + mint timecode */
+.s4{background:linear-gradient(180deg, #1a2238 0%, #0a0e1a 100%);}
+.s4::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg, transparent 0, transparent 12px, rgba(92,213,255,.15) 12px, rgba(92,213,255,.15) 13px);}
+.s4::after{content:"";position:absolute;left:8%;right:8%;bottom:30%;height:30%;
+	background:linear-gradient(90deg, transparent 0%, var(--magenta) 25%, var(--cyan) 60%, var(--mint) 100%);
+	clip-path:polygon(0 90%, 8% 50%, 15% 70%, 22% 30%, 30% 60%, 38% 20%, 46% 55%, 54% 35%, 62% 65%, 72% 25%, 82% 50%, 92% 35%, 100% 60%, 100% 100%, 0 100%);
+	filter:drop-shadow(0 0 6px rgba(255,61,164,.5));
+}
+
+.shot-meta{
+	padding:.7rem .9rem .8rem;
+	display:flex;flex-direction:column;gap:.3rem;
+}
+.shot-num{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--magenta)}
+.shot-title{font-family:var(--display);font-size:1.3rem;font-weight:700;line-height:1;color:var(--text);text-transform:uppercase;letter-spacing:-.005em}
+.shot-desc{font-family:var(--sans);font-size:.78rem;color:var(--text-mid);line-height:1.4;font-style:italic}
+
+.storyboard-foot{
+	display:flex;gap:1rem;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;
+	letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-top:1rem;
+	padding-top:1rem;border-top:1px solid var(--rule);
+}
+.storyboard-foot b{color:var(--cyan);font-weight:500}
+
+/* ─── ACT II — OSS as filmstrip cards */
+.filmstrip{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.fs-card{
+	position:relative;background:var(--bg-lift);border:1px solid var(--rule-bright);
+	padding:2rem 2rem 1.6rem;display:flex;flex-direction:column;gap:1rem;
+}
+/* sprocket holes left/right */
+.fs-card::before, .fs-card::after{
+	content:"";position:absolute;top:0;bottom:0;width:18px;
+	background:
+		repeating-linear-gradient(180deg, transparent 0, transparent 14px, var(--bg-deep) 14px, var(--bg-deep) 24px);
+}
+.fs-card::before{left:0}
+.fs-card::after{right:0}
+.fs-card:hover{border-color:var(--magenta)}
+.fs-card .head{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-mid);position:relative;z-index:1;padding:0 .8rem}
+.fs-card .head .tag{color:var(--mint);border:1px solid var(--mint);padding:1px 6px;letter-spacing:.2em}
+.fs-card h3{
+	font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:.95;
+	color:var(--text);letter-spacing:-.01em;text-transform:uppercase;position:relative;z-index:1;padding:0 .8rem;
+}
+.fs-card h3 .slash{color:var(--magenta);font-style:italic;font-weight:700}
+.fs-card p{font-size:.95rem;line-height:1.55;color:var(--text-mid);position:relative;z-index:1;padding:0 .8rem;flex:1}
+.fs-card p a{color:var(--cyan);border-bottom:1px solid var(--cyan-deep)}
+.fs-card .link{
+	font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+	color:var(--cyan);position:relative;z-index:1;padding:0 .8rem;display:inline-flex;gap:.5rem;align-items:center;
+}
+.fs-card .link::after{content:"→"}
+.fs-card .link:hover{color:var(--magenta)}
+
+/* ─── ACT III — writing as title cards */
+.cards-list{list-style:none;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule-bright)}
+.cards-list li{border-bottom:1px solid var(--rule-bright)}
+.title-card{
+	display:grid;grid-template-columns:90px 1fr auto;gap:2rem;align-items:baseline;
+	padding:1.8rem .6rem;
+	transition:padding .25s, background .25s;
+}
+.title-card:hover{background:var(--magenta-soft);padding-left:1.4rem}
+.tc-num{font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:1;color:var(--magenta);letter-spacing:-.01em;text-shadow:0 0 16px rgba(255,61,164,.3)}
+.tc-title{
+	font-family:var(--display);font-weight:700;font-size:clamp(1.6rem,3vw,2.4rem);line-height:1.05;
+	color:var(--text);letter-spacing:-.008em;text-transform:uppercase;
+}
+.tc-desc{display:block;font-family:var(--sans);font-size:.98rem;color:var(--text-mid);line-height:1.5;font-weight:400;text-transform:none;margin-top:.4rem;letter-spacing:0;max-width:62ch}
+.tc-meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);align-self:center;display:inline-flex;gap:.5rem;align-items:center}
+.tc-meta::after{content:"→"}
+
+/* ─── ACT IV — dossier as production credits */
+.dossier{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule-bright)}
+.d-row{
+	display:grid;grid-template-columns:160px 1fr 280px;gap:2.2rem;align-items:start;
+	padding:2.2rem .4rem;border-bottom:1px solid var(--rule);
+}
+.d-row:last-child{border-bottom:none}
+.d-year{
+	font-family:var(--display);font-weight:900;font-style:italic;font-size:3rem;line-height:.9;
+	color:var(--magenta);letter-spacing:-.01em;text-shadow:0 0 18px rgba(255,61,164,.32);
+}
+.d-year small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);font-style:normal;font-weight:500;margin-top:.5rem;text-shadow:none}
+.d-main h3{
+	font-family:var(--display);font-weight:800;font-size:2.2rem;line-height:.95;
+	color:var(--text);letter-spacing:-.01em;text-transform:uppercase;margin-bottom:.3rem;
+}
+.d-main .role{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:.9rem}
+.d-main p{font-size:1rem;line-height:1.55;color:var(--text-mid);max-width:54ch;margin-bottom:.8rem}
+.d-main p em{color:var(--magenta);font-style:italic}
+.d-main p a{color:var(--cyan);border-bottom:1px solid var(--cyan-deep)}
+.d-stats{
+	border-left:1px solid var(--rule-bright);padding-left:1.6rem;
+	display:flex;flex-direction:column;gap:1rem;
+}
+.d-stat{display:flex;flex-direction:column;gap:.2rem;border-bottom:1px solid var(--rule);padding-bottom:.7rem}
+.d-stat:last-child{border-bottom:none;padding-bottom:0}
+.d-stat .k{font-family:var(--display);font-weight:800;font-size:1.7rem;line-height:1;color:var(--mint);letter-spacing:-.005em;text-shadow:0 0 12px rgba(77,255,170,.3)}
+.d-stat .v{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-mid)}
+
+/* ─── ACT V — end credits / contact */
+.credits-roll-end{
+	display:grid;grid-template-columns:1fr 1fr;gap:3rem;border-top:1px solid var(--rule-bright);padding-top:2rem;
+}
+.credits-roll-end h3{font-family:var(--display);font-weight:800;font-size:1.4rem;color:var(--magenta);letter-spacing:.04em;text-transform:uppercase;margin-bottom:1rem}
+.credits-roll-end p{font-size:1.05rem;line-height:1.6;color:var(--text-mid);margin-bottom:1rem}
+.credits-roll-end p em{color:var(--cyan);font-style:italic}
+.contact-roll{list-style:none;border-top:1px solid var(--rule)}
+.contact-roll li{
+	display:grid;grid-template-columns:120px 1fr;gap:1.2rem;align-items:baseline;
+	padding:.85rem 0;border-bottom:1px solid var(--rule);
+}
+.contact-roll li b{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);font-weight:500}
+.contact-roll li a{color:var(--text);border-bottom:1px solid transparent}
+.contact-roll li a:hover{color:var(--magenta);border-color:var(--magenta)}
+
+/* ─── End-roll footer */
+.end-roll{
+	margin-top:4rem;padding:1.5rem 5vw 2rem;border-top:1px solid var(--rule-bright);
+	display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;align-items:center;
+	font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-mid);
+}
+.end-roll .center{text-align:center;color:var(--cyan)}
+.end-roll .right{text-align:right}
+.end-roll .right b{color:var(--mint);font-weight:500;text-shadow:0 0 5px var(--mint)}
+
+[data-reveal]{opacity:0;transform:translateY(14px);transition:opacity .8s ease, transform .8s ease}
+[data-reveal].in{opacity:1;transform:none}
+
+@media (max-width:900px){
+	.timecode-bar,.scrubber{padding-left:5vw;padding-right:5vw}
+	.scrubber{grid-template-columns:1fr;gap:.4rem}
+	.scrubber > .left,.scrubber > .right{display:none}
+	.track ul{flex-wrap:wrap;gap:.3rem;justify-content:flex-start}
+	.frame{aspect-ratio:4 / 3}
+	.title{font-size:clamp(2.6rem,12vw,4.6rem)}
+	.credits{grid-template-columns:1fr;gap:1.6rem}
+	.credits-roll{border-left:none;border-top:1px solid var(--rule-bright);padding-left:0;padding-top:1.4rem}
+	.storyboard{grid-template-columns:1fr 1fr}
+	.filmstrip,.credits-roll-end{grid-template-columns:1fr}
+	.act-head{grid-template-columns:auto 1fr;gap:1rem}
+	.act-meta{grid-column:1 / -1;text-align:left;padding-top:.5rem;border-top:1px solid var(--rule);margin-top:.5rem}
+	.title-card{grid-template-columns:50px 1fr;gap:1rem}
+	.tc-meta{grid-column:2;margin-top:.5rem}
+	.d-row{grid-template-columns:1fr;gap:1rem}
+	.d-stats{border-left:none;border-top:1px solid var(--rule-bright);padding-left:0;padding-top:1rem}
+	.end-roll{grid-template-columns:1fr;text-align:center}
+	.end-roll .center,.end-roll .right{text-align:center}
+}
+</style>
+</head>
+<body>
+
+<header class="timecode-bar">
+	<div class="tc-left"><span class="tc-rec"><span class="dot"></span> REC</span><span>SCENE 01 / TAKE 06</span></div>
+	<div class="tc-center" id="clock">00:00:00 AEST</div>
+	<div class="tc-right">f/2.0 · ISO 800 · <b>SYDNEY</b></div>
+</header>
+
+<nav class="scrubber" aria-label="sections">
+	<span class="left">▶ playhead</span>
+	<div class="track">
+		<ul>
+			<li><a href="#now" class="active"><span class="marker"></span> ACT I — NOW</a></li>
+			<li><a href="#oss"><span class="marker"></span> ACT II — OSS</a></li>
+			<li><a href="#writing"><span class="marker"></span> ACT III — WRITING</a></li>
+			<li><a href="#prev"><span class="marker"></span> ACT IV — PREV</a></li>
+			<li><a href="#contact"><span class="marker"></span> ACT V — END</a></li>
+		</ul>
+	</div>
+	<span class="right">runtime <span id="uptime" style="color:var(--cyan)">00:00</span></span>
+</nav>
+
+<!-- ─────────────── Title card -->
+<section class="reel" id="top">
+	<div class="frame">
+		<div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
+		<div class="slate">
+			<span class="pill">Reel 01</span>
+			<span class="pill cyan">2026</span>
+			<span>Cam A · 4K · 23.976</span>
+		</div>
+		<div class="tc-corner">Timecode<b>00:00:01:18</b></div>
+
+		<h1 class="title" data-reveal>
+			Tom <span class="magenta">B.</span><br/>
+			<span class="em">Engineer.</span><br/>
+			<span class="cyan">Founder.</span>
+		</h1>
+		<p class="subtitle" data-reveal>An open-source platform for AI filmmaking — <b>OPENSTORY</b></p>
+	</div>
+
+	<!-- below frame: synopsis + credits roll -->
+	<div class="credits">
+		<div class="credits-block" data-reveal>
+			<h2>An engineer building <span class="magenta">OpenStory</span> — an open-source platform for <span class="em">AI filmmaking.</span></h2>
+			<p>Previously founded <a href="#prev">Comma Payments</a> (acquired 2023) and <a href="#prev">Specle</a> (2006). Engineering lead on the Flow Wallet Chrome Extension. Currently shipping AI video generation on TanStack Start &amp; Cloudflare Workers.</p>
+			<div class="cta-row">
+				<a class="cta primary" href="https://openstory.so">▶ &nbsp; Watch openstory</a>
+				<a class="cta" href="https://github.com/tombeckenham">github.com/tombeckenham</a>
+			</div>
+		</div>
+		<div class="credits-roll" data-reveal>
+			<div class="cr-row"><b>Directed by</b><span>Tom Beckenham · Sydney, AU</span></div>
+			<div class="cr-row"><b>Now playing</b><span>OpenStory · Open Video Generation</span></div>
+			<div class="cr-row"><b>Stack</b><span>TypeScript · Bun · TanStack · Cloudflare Workers</span></div>
+			<div class="cr-row"><b>Focus</b><span>AI video · agentic systems · open source</span></div>
+			<div class="cr-row"><b>Hire</b><span><a href="https://www.toptal.com/resume/tom-beckenham">Top 3% on Toptal</a> · advisory &amp; eng leadership</span></div>
+		</div>
+	</div>
+</section>
+
+<!-- ─────────────── ACT I — Now / Storyboard -->
+<div class="cut"><span>Cut to —</span></div>
+<section class="act" id="now">
+	<header class="act-head">
+		<div class="act-id" data-reveal>I.<small>Act One</small></div>
+		<h2 class="act-title" data-reveal>Now &nbsp;·&nbsp; Building OpenStory</h2>
+		<div class="act-meta">int · workshop · 2026</div>
+	</header>
+
+	<h2 class="act-h1" data-reveal>Script to screen, <span class="magenta em">consistent</span> every shot.</h2>
+	<p class="act-deck" data-reveal>Paste a script and OpenStory returns a scene-by-scene breakdown, generated frames, and motion video. Characters, locations, and visual style persist across every shot. Open source, MIT.</p>
+
+	<div data-reveal style="font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin:1.4rem 0 .8rem">↳ Storyboard / Pipeline · Runtime <b style="color:var(--cyan);font-weight:500">cloudflare-workers</b></div>
+
+	<div class="storyboard">
+		<article class="shot" data-reveal>
+			<div class="shot-frame s1">
+				<span class="mark">SH-01</span>
+				<span class="tc">00:00:14</span>
+			</div>
+			<div class="shot-meta">
+				<span class="shot-num">01 · Script</span>
+				<span class="shot-title">Wide</span>
+				<span class="shot-desc">A woman steps to the edge. The city swells below.</span>
+			</div>
+		</article>
+		<article class="shot" data-reveal>
+			<div class="shot-frame s2">
+				<span class="mark">SH-02</span>
+				<span class="tc">00:01:48</span>
+			</div>
+			<div class="shot-meta">
+				<span class="shot-num">02 · Scenes · LLM</span>
+				<span class="shot-title">Over-shoulder</span>
+				<span class="shot-desc">Establishing → over-shoulder → tight close.</span>
+			</div>
+		</article>
+		<article class="shot" data-reveal>
+			<div class="shot-frame s3">
+				<span class="mark">SH-03</span>
+				<span class="tc">00:03:22</span>
+			</div>
+			<div class="shot-meta">
+				<span class="shot-num">03 · Frames · Fal.ai</span>
+				<span class="shot-title">Close</span>
+				<span class="shot-desc">Persistent character, location, palette across shots.</span>
+			</div>
+		</article>
+		<article class="shot" data-reveal>
+			<div class="shot-frame s4">
+				<span class="mark">SH-04</span>
+				<span class="tc">00:06:18</span>
+			</div>
+			<div class="shot-meta">
+				<span class="shot-num">04 · Motion</span>
+				<span class="shot-title">Final cut</span>
+				<span class="shot-desc">Per-shot video synthesis. Out: final.mp4.</span>
+			</div>
+		</article>
+	</div>
+
+	<div class="storyboard-foot">
+		<span>Stack — <b>tanstack-start</b> · <b>bun</b> · <b>tanstack-ai</b> · <b>fal.ai</b></span>
+	</div>
+
+	<div class="cta-row" data-reveal style="margin-top:2rem">
+		<a class="cta primary" href="https://openstory.so">▶ &nbsp; openstory.so</a>
+		<a class="cta" href="https://github.com/openstory-so/openstory">git · openstory-so/openstory</a>
+	</div>
+</section>
+
+<!-- ─────────────── ACT II — OSS -->
+<div class="cut"><span>Cut to —</span></div>
+<section class="act" id="oss">
+	<header class="act-head">
+		<div class="act-id" data-reveal>II.<small>Act Two</small></div>
+		<h2 class="act-title" data-reveal>Open source &nbsp;·&nbsp; Filmstrip</h2>
+		<div class="act-meta">contributions · merged · personal</div>
+	</header>
+
+	<h2 class="act-h1" data-reveal>In the <span class="magenta em">commons.</span></h2>
+	<p class="act-deck" data-reveal>Selected merged work and personal tooling — sources linked.</p>
+
+	<div class="filmstrip">
+		<article class="fs-card" data-reveal>
+			<div class="head"><span>library · pr #237</span><span class="tag">merged</span></div>
+			<h3>TanStack <span class="slash">/</span> ai</h3>
+			<p>Authored the <a href="https://github.com/TanStack/ai/pull/237">Fal.ai adapter</a> for image and video generation. Also: NanoBanana Pro 2 support, an OpenRouter SDK upgrade with structured output, and assorted fixes.</p>
+			<a class="link" href="https://github.com/TanStack/ai">github.com/TanStack/ai</a>
+		</article>
+
+		<article class="fs-card" data-reveal>
+			<div class="head"><span>tooling · personal</span><span class="tag">live</span></div>
+			<h3>tom <span class="slash">·</span> dotfiles</h3>
+			<p>A setup for multi-agent Claude Code workflows with git worktrees. Parallel agents, scoped permissions, tuned hooks.</p>
+			<a class="link" href="https://github.com/tombeckenham/dotfiles">github.com/tombeckenham/dotfiles</a>
+		</article>
+	</div>
+</section>
+
+<!-- ─────────────── ACT III — Writing -->
+<div class="cut"><span>Cut to —</span></div>
+<section class="act" id="writing">
+	<header class="act-head">
+		<div class="act-id" data-reveal>III.<small>Act Three</small></div>
+		<h2 class="act-title" data-reveal>Writing &nbsp;·&nbsp; Title cards</h2>
+		<div class="act-meta">essays · medium</div>
+	</header>
+
+	<h2 class="act-h1" data-reveal><span class="cyan em">Dispatches.</span></h2>
+
+	<ol class="cards-list">
+		<li data-reveal>
+			<a class="title-card" href="https://medium.com/@tombeckenham/rewriting-whole-apps-with-ai-69e879ad5f9c">
+				<span class="tc-num">01</span>
+				<span><span class="tc-title">Rewriting whole apps with AI.</span><span class="tc-desc">Using Claude Code to rapidly rebuild a legacy frontend — where the speedups come from, and where they don't.</span></span>
+				<span class="tc-meta">Medium</span>
+			</a>
+		</li>
+		<li data-reveal>
+			<a class="title-card" href="https://medium.com/@tombeckenham/sustainable-ai-business-models-9aa5baa527b0">
+				<span class="tc-num">02</span>
+				<span><span class="tc-title">Sustainable AI business models.</span><span class="tc-desc">Lessons from fintech on pricing, margin, and building AI products that pay for themselves instead of their infra bill.</span></span>
+				<span class="tc-meta">Medium</span>
+			</a>
+		</li>
+	</ol>
+</section>
+
+<!-- ─────────────── ACT IV — Dossier -->
+<div class="cut"><span>Cut to —</span></div>
+<section class="act" id="prev">
+	<header class="act-head">
+		<div class="act-id" data-reveal>IV.<small>Act Four</small></div>
+		<h2 class="act-title" data-reveal>Previously &nbsp;·&nbsp; Production credits</h2>
+		<div class="act-meta">2006 — 2024</div>
+	</header>
+
+	<h2 class="act-h1" data-reveal><span class="magenta em">Previously.</span></h2>
+
+	<div class="dossier">
+		<article class="d-row" data-reveal>
+			<div class="d-year">2024<small>Eng Lead</small></div>
+			<div class="d-main">
+				<h3>Flow Blockchain</h3>
+				<p class="role">Flow Wallet · Chrome Extension</p>
+				<p>Architectural overhaul, CI/CD, state-management refactor, and end-to-end test coverage on the primary consumer gateway to Flow and Flow EVM. Source: <a href="https://github.com/onflow/FRW-Extension">onflow/FRW-Extension</a>.</p>
+			</div>
+			<div class="d-stats">
+				<div class="d-stat"><span class="k">EVM</span><span class="v">Flow + EVM gateway</span></div>
+				<div class="d-stat"><span class="k">E2E</span><span class="v">test harness shipped</span></div>
+				<div class="d-stat"><span class="k">OSS</span><span class="v">onflow / FRW-Extension</span></div>
+			</div>
+		</article>
+
+		<article class="d-row" data-reveal>
+			<div class="d-year">2019<small>– 2023 · Founder</small></div>
+			<div class="d-main">
+				<h3>Comma Payments</h3>
+				<p class="role">Open Banking · Bulk Payments · UK</p>
+				<p>Pioneered open-banking bulk payments in the UK; <em>£18M+/month</em> processed at run-rate. <em>Acquired</em> by Weavr (Paystratus Group) in March 2023.</p>
+			</div>
+			<div class="d-stats">
+				<div class="d-stat"><span class="k">£18M+</span><span class="v">processed / month</span></div>
+				<div class="d-stat"><span class="k">2023</span><span class="v">acquired by Weavr</span></div>
+				<div class="d-stat"><span class="k">UK</span><span class="v">open banking pioneer</span></div>
+			</div>
+		</article>
+
+		<article class="d-row" data-reveal>
+			<div class="d-year">2006<small>– 2017 · Founder</small></div>
+			<div class="d-main">
+				<h3>Specle</h3>
+				<p class="role">Ad-spec database · Publishers &amp; agencies</p>
+				<p>Central ad-spec database used by The Guardian, Daily Mail, and Condé Nast. <em>Cash-positive</em> within three years; still operating today, twenty years on.</p>
+			</div>
+			<div class="d-stats">
+				<div class="d-stat"><span class="k">3 yrs</span><span class="v">to cash-positive</span></div>
+				<div class="d-stat"><span class="k">Live</span><span class="v">operating, 2026</span></div>
+				<div class="d-stat"><span class="k">UK</span><span class="v">publishers &amp; agencies</span></div>
+			</div>
+		</article>
+	</div>
+</section>
+
+<!-- ─────────────── ACT V — End credits / contact -->
+<div class="cut"><span>Cut to —</span></div>
+<section class="act" id="contact">
+	<header class="act-head">
+		<div class="act-id" data-reveal>V.<small>End credits</small></div>
+		<h2 class="act-title" data-reveal>Contact &nbsp;·&nbsp; Roll credits</h2>
+		<div class="act-meta">links · availability</div>
+	</header>
+
+	<h2 class="act-h1" data-reveal>Let's build <span class="magenta em">something.</span></h2>
+	<p class="act-deck" data-reveal>Open to advisory, technical leadership, and high-signal collaboration on AI video, agentic systems, and fintech infrastructure.</p>
+
+	<div class="credits-roll-end">
+		<div data-reveal>
+			<h3>Director's note</h3>
+			<p>Set in <em>Big Shoulders</em> with <em>Inter</em> for body. Color graded magenta and cyan. Letterboxed 21:9. Composed in Sydney; runs anywhere.</p>
+			<p>Built on <a href="https://www.tanstack.com" style="color:var(--cyan);border-bottom:1px solid var(--cyan-deep)">TanStack Start</a> + Cloudflare Workers. No tracking. No cookies.</p>
+		</div>
+		<div data-reveal>
+			<h3>Roll credits</h3>
+			<ul class="contact-roll">
+				<li><b>Code</b><a href="https://github.com/tombeckenham">github.com/tombeckenham</a></li>
+				<li><b>Social</b><a href="https://x.com/tombeckenham">x.com/tombeckenham</a></li>
+				<li><b>Résumé</b><a href="https://www.linkedin.com/in/tombeckenham/">linkedin.com/in/tombeckenham</a></li>
+				<li><b>Hire</b><a href="https://www.toptal.com/resume/tom-beckenham">toptal.com/resume/tom-beckenham — top 3%</a></li>
+			</ul>
+		</div>
+	</div>
+</section>
+
+<footer class="end-roll">
+	<span class="left">© 2026 · Tom Beckenham</span>
+	<span class="center">Sydney · 33.8688° S · A solo production</span>
+	<span class="right">SESSION <span id="uptime2" style="color:var(--mint)">00:00</span> · <b>ONLINE</b></span>
+</footer>
+
+<script>
+const clock = document.getElementById('clock');
+const uptime = document.getElementById('uptime');
+const uptime2 = document.getElementById('uptime2');
+const start = Date.now();
+function tick(){
+	const now = new Date();
+	const hh = String(now.getHours()).padStart(2,'0');
+	const mm = String(now.getMinutes()).padStart(2,'0');
+	const ss = String(now.getSeconds()).padStart(2,'0');
+	clock.textContent = `${hh}:${mm}:${ss} AEST`;
+	const d = Math.floor((Date.now()-start)/1000);
+	const t = `${String(Math.floor(d/60)).padStart(2,'0')}:${String(d%60).padStart(2,'0')}`;
+	uptime.textContent = t; uptime2.textContent = t;
+}
+tick(); setInterval(tick,1000);
+
+const io = new IntersectionObserver((entries)=>{
+	entries.forEach((e)=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+},{ threshold:.18 });
+document.querySelectorAll('[data-reveal]').forEach((el,i)=>{
+	el.style.transitionDelay = `${Math.min(i*40,400)}ms`;
+	io.observe(el);
+});
+
+// active scrubber on scroll
+const tabs = document.querySelectorAll('.track a');
+const sections = ['now','oss','writing','prev','contact'].map(id=>document.getElementById(id));
+window.addEventListener('scroll', ()=>{
+	let cur = 0;
+	const y = window.scrollY + 200;
+	sections.forEach((s,i)=>{ if (s && s.offsetTop <= y) cur = i; });
+	tabs.forEach((a,i)=>a.classList.toggle('active', i===cur));
+});
+</script>
+</body>
+</html>
