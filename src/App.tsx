@@ -170,12 +170,12 @@ function App() {
 					<b>stack</b>
 					<span>typescript · bun · tanstack · cloudflare workers · react</span>
 					<b>focus</b><span>ai video · agentic systems · open source</span>
-					<b>hire</b>
+					<b>linkedin</b>
 					<span>
-						<a href="https://www.toptal.com/resume/tom-beckenham">
-							top 3% on toptal
+						<a href="https://www.linkedin.com/in/tombeckenham/">
+							linkedin.com/in/tombeckenham
 						</a>{" "}
-						· advisory &amp; eng leadership
+						· open to advisory &amp; eng leadership
 					</span>
 				</div>
 			</section>
@@ -268,7 +268,7 @@ function App() {
 				/>
 				<div className="block-body">
 					<h2 className="h-sect" data-reveal>
-						$ ls <span className="pink">~/oss</span>
+						$ ls <span className="pink">./open-source</span>
 					</h2>
 
 					<div className="oss">
@@ -323,7 +323,7 @@ function App() {
 				/>
 				<div className="block-body">
 					<h2 className="h-sect" data-reveal>
-						$ tail -f <span className="pink">~/writing</span>
+						$ tail -f <span className="pink">./writing</span>
 					</h2>
 
 					<ul className="writes">
@@ -417,15 +417,15 @@ function App() {
 									open banking · bulk payments · uk
 								</div>
 								<p>
-									Pioneered open-banking bulk payments in the UK; £18M+/month
-									processed at run rate. Acquired by Weavr (Paystratus Group) in
-									March 2023.
+									Pioneered open-banking bulk payments in the UK, processing
+									£18M+/month in payment volume through the platform. Acquired by
+									Weavr (Paystratus Group) in March 2023.
 								</p>
 							</div>
 							<div className="d-side">
 								<div className="kv">
-									<span className="k">arr</span>
-									<span className="v">£18m+/mo processed</span>
+									<span className="k">volume</span>
+									<span className="v">£18m+ /mo processed</span>
 								</div>
 								<div className="kv">
 									<span className="k">exit</span>
@@ -502,15 +502,9 @@ function App() {
 							<a href="https://x.com/tombeckenham">x.com/tombeckenham</a>
 						</div>
 						<div className="kv">
-							<span className="k">résumé</span>
+							<span className="k">linkedin</span>
 							<a href="https://www.linkedin.com/in/tombeckenham/">
 								linkedin.com/in/tombeckenham
-							</a>
-						</div>
-						<div className="kv">
-							<span className="k">hire</span>
-							<a href="https://www.toptal.com/resume/tom-beckenham">
-								toptal.com/resume/tom-beckenham
 							</a>
 						</div>
 					</div>
