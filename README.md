@@ -6,7 +6,7 @@ Technical founder. Building [OpenStory](https://openstory.so) — AI video gener
 
 ## Now
 
-**[OpenStory](https://openstory.so)** — AI video generation platform for property developers and advertisers. The biggest problem with AI video generation isn't quality, it's waiting — OpenStory is built for speed.
+**[OpenStory](https://openstory.so)** — Open Video Generation.
 
 Paste a script and get back a scene-by-scene breakdown, AI-generated frames, and motion video — with characters, locations, and visual style staying consistent across every shot. Built with TanStack Start, Bun, and Cloudflare Workers; image and motion generation via [TanStack AI](https://github.com/TanStack/ai) + [Fal.ai](https://fal.ai).
 
