@@ -6,6 +6,10 @@ Technical founder. Building [OpenStory](https://openstory.so) — open-source pl
 
 ## Now
 
+<p align="center">
+  <a href="https://openstory.so"><img src="https://raw.githubusercontent.com/openstory-so/openstory/main/.github/openstory-logo.svg" alt="OpenStory" width="200" /></a>
+</p>
+
 **[OpenStory](https://openstory.so)** — Open Video Generation.
 
 Paste a script and get back a scene-by-scene breakdown, AI-generated frames, and motion video — with characters, locations, and visual style staying consistent across every shot. Built with TanStack Start, Bun, and Cloudflare Workers; image and motion generation via [TanStack AI](https://github.com/TanStack/ai) + [Fal.ai](https://fal.ai).
