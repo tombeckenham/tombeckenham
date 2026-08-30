@@ -12,6 +12,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 const EMAIL = "tombeckenham@gmail.com";
 
+const MARQUEE = [
+	"Available for contract",
+	"AI platform engineering",
+	"TypeScript end-to-end",
+	"0→1 product delivery",
+	"Fractional CTO",
+	"Open source",
+];
+
 function App() {
 	const heroRef = useRef<HTMLDivElement>(null);
 	const servicesRef = useRef<HTMLDivElement>(null);
@@ -26,12 +35,12 @@ function App() {
 		if (hero) {
 			gsap.fromTo(
 				hero.querySelectorAll("[data-reveal]"),
-				{ opacity: 0, y: 14 },
+				{ opacity: 0, y: 24 },
 				{
 					opacity: 1,
 					y: 0,
-					duration: 0.6,
-					stagger: 0.06,
+					duration: 0.7,
+					stagger: 0.07,
 					ease: "expo.out",
 					delay: 0.1,
 				},
@@ -50,7 +59,7 @@ function App() {
 			if (!section) return;
 			gsap.fromTo(
 				section.querySelectorAll("[data-reveal]"),
-				{ opacity: 0, y: 16 },
+				{ opacity: 0, y: 20 },
 				{
 					opacity: 1,
 					y: 0,
@@ -71,18 +80,17 @@ function App() {
 		<div className="page">
 			<nav className="topnav">
 				<a href="#top" className="brand">
-					<span className="brand-mark">TB</span>
-					<span className="brand-name">Tom Beckenham</span>
+					Tom Beckenham<span className="accent">.</span>
 				</a>
-				<div className="topnav-links">
+				<div className="topnav-links mono">
 					<a href="#services">Services</a>
 					<a href="#work">Work</a>
-					<a href="#oss">Open Source</a>
+					<a href="#oss">Open source</a>
 					<a href="#experience">Experience</a>
 					<a href="#writing">Writing</a>
 				</div>
-				<a className="btn btn-primary btn-nav" href={`mailto:${EMAIL}`}>
-					Start a project
+				<a className="btn btn-solid" href={`mailto:${EMAIL}`}>
+					Start a project ↗
 				</a>
 			</nav>
 
@@ -90,415 +98,389 @@ function App() {
 			<header ref={heroRef} className="hero" id="top">
 				<div className="hero-copy">
 					<p className="mono kicker" data-reveal>
-						Senior full-stack &amp; AI platform engineer · Sydney / remote
+						Senior full-stack &amp; AI platform engineer
+						<span className="accent"> ✦ </span>Sydney / remote
 					</p>
 					<h1 className="hero-title" data-reveal>
-						I build production <em className="em-peach">AI systems</em> — from
-						first commit to first paying customer.
+						From first
+						<br />
+						<em className="serif-it">commit</em>
+						<br />
+						to first
+						<br />
+						<em className="serif-it">paying&nbsp;customer.</em>
 					</h1>
 					<p className="hero-lede" data-reveal>
-						25+ years shipping complex products. Founded, scaled and sold two
-						venture-backed companies. Now hands-on full time: sole architect of{" "}
-						<a href="https://openstory.so">OpenStory</a> and core maintainer of{" "}
-						<a href="https://tanstack.com/ai">TanStack AI</a>. Available for
-						contract engagements — as sole engineer on a 0→1 build, embedded
-						senior IC, or fractional technical leadership.
+						25+ years shipping complex products. Two venture-backed companies
+						founded and sold. Now hands-on full time — sole architect of{" "}
+						<a href="https://openstory.so">OpenStory</a>, core maintainer of{" "}
+						<a href="https://tanstack.com/ai">TanStack AI</a>, and available for
+						contract: 0→1 builds, embedded senior IC, or fractional technical
+						leadership.
 					</p>
 					<div className="hero-ctas" data-reveal>
-						<a className="btn btn-primary" href={`mailto:${EMAIL}`}>
-							Email me <Arrow />
+						<a className="btn btn-solid" href={`mailto:${EMAIL}`}>
+							Email me ↗
 						</a>
 						<a className="btn" href="https://www.linkedin.com/in/tombeckenham/">
 							LinkedIn
 						</a>
 						<a className="btn" href="https://github.com/tombeckenham">
-							<Github /> GitHub
+							GitHub
 						</a>
-					</div>
-					<div className="stat-row" data-reveal>
-						<div className="stat">
-							<b>25+ yrs</b>
-							<span>shipping software</span>
-						</div>
-						<div className="stat">
-							<b>2 exits</b>
-							<span>companies founded &amp; sold</span>
-						</div>
-						<div className="stat">
-							<b>£18m+/mo</b>
-							<span>payments processed at Comma</span>
-						</div>
-						<div className="stat">
-							<b>2,200+</b>
-							<span>commits on OpenStory</span>
-						</div>
 					</div>
 				</div>
 				<div className="hero-photo" data-reveal>
 					<img src={headshot} alt="Tom Beckenham" />
-					<span className="avail-badge">
-						<i className="dot" /> Available for contract
-					</span>
+					<span className="sticker mono">● Available for contract</span>
 				</div>
 			</header>
 
+			<div className="stats-strip">
+				<div className="stat" data-reveal>
+					<b>25+</b>
+					<span className="mono">years shipping software</span>
+				</div>
+				<div className="stat" data-reveal>
+					<b>×2</b>
+					<span className="mono">companies founded &amp; sold</span>
+				</div>
+				<div className="stat" data-reveal>
+					<b>£18m+</b>
+					<span className="mono">monthly volume at Comma</span>
+				</div>
+				<div className="stat" data-reveal>
+					<b>2,200+</b>
+					<span className="mono">commits on OpenStory</span>
+				</div>
+			</div>
+
+			<Marquee />
+
 			{/* ─────────────── §01 Services */}
 			<section ref={servicesRef} className="sect" id="services">
-				<SectionHeading index="§01" title="What I do" />
-				<div className="svc-grid">
-					<article className="card svc" data-reveal>
-						<p className="mono-accent svc-num">01</p>
+				<SectionHeading index="01" title="What I do" />
+				<div className="svc">
+					<article className="svc-row" data-reveal>
+						<span className="svc-num mono">01</span>
 						<h3>AI platform engineering</h3>
-						<p>
-							LLM and generative-media integration done properly: provider
-							adapters across Anthropic, OpenAI, Google, OpenRouter and fal.ai,
-							durable generation pipelines on Cloudflare Workflows, streaming
-							structured output, and deterministic testing of non-deterministic
-							AI flows.
-						</p>
-						<ul className="svc-list mono">
-							<li>LLM &amp; media pipelines</li>
-							<li>Streaming structured output</li>
-							<li>Record-and-replay E2E testing</li>
-						</ul>
+						<div className="svc-detail">
+							<p>
+								LLM and generative-media integration done properly: provider
+								adapters across Anthropic, OpenAI, Google, OpenRouter and
+								fal.ai, durable pipelines on Cloudflare Workflows, streaming
+								structured output — and deterministic testing of
+								non-deterministic AI flows.
+							</p>
+							<p className="mono svc-tags">
+								LLM &amp; media pipelines / streaming structured output /
+								record-and-replay E2E
+							</p>
+						</div>
 					</article>
-					<article className="card svc" data-reveal>
-						<p className="mono-accent svc-num">02</p>
+					<article className="svc-row" data-reveal>
+						<span className="svc-num mono">02</span>
 						<h3>Full-stack product delivery</h3>
-						<p>
-							Zero-to-one builds as sole or lead engineer. TypeScript
-							end-to-end: React, TanStack Start &amp; Query, Node and Bun,
-							Cloudflare Workers, D1 and R2. Strict types, real test coverage,
-							CI/CD from day one — shipped weekly, not quarterly.
-						</p>
-						<ul className="svc-list mono">
-							<li>0→1 MVPs that reach revenue</li>
-							<li>Serverless &amp; edge architecture</li>
-							<li>Legacy rebuilds, AI-accelerated</li>
-						</ul>
+						<div className="svc-detail">
+							<p>
+								Zero-to-one builds as sole or lead engineer. TypeScript
+								end-to-end: React, TanStack Start &amp; Query, Node and Bun,
+								Cloudflare Workers, D1 and R2. Strict types, real test
+								coverage, CI/CD from day one — shipped weekly, not quarterly.
+							</p>
+							<p className="mono svc-tags">
+								0→1 MVPs that reach revenue / serverless &amp; edge / legacy
+								rebuilds, AI-accelerated
+							</p>
+						</div>
 					</article>
-					<article className="card svc" data-reveal>
-						<p className="mono-accent svc-num">03</p>
+					<article className="svc-row" data-reveal>
+						<span className="svc-num mono">03</span>
 						<h3>Technical leadership</h3>
-						<p>
-							Fractional CTO and advisory for founders. I&rsquo;ve raised
-							US&nbsp;$6m+, built engineering teams from 0 to 15, sold to
-							enterprise, and sat both sides of an acquisition — so the advice
-							covers architecture, hiring and the board deck.
-						</p>
-						<ul className="svc-list mono">
-							<li>Fractional CTO / advisory</li>
-							<li>Architecture &amp; team reviews</li>
-							<li>Founder-to-founder diligence</li>
-						</ul>
+						<div className="svc-detail">
+							<p>
+								Fractional CTO and advisory for founders. I&rsquo;ve raised
+								US&nbsp;$6m+, built engineering teams from 0 to 15, sold to
+								enterprise, and sat both sides of an acquisition — so the
+								advice covers architecture, hiring and the board deck.
+							</p>
+							<p className="mono svc-tags">
+								fractional CTO / architecture &amp; team reviews /
+								founder-to-founder diligence
+							</p>
+						</div>
 					</article>
 				</div>
 			</section>
 
 			{/* ─────────────── §02 Selected work */}
 			<section ref={workRef} className="sect" id="work">
-				<SectionHeading index="§02" title="Selected work" />
+				<SectionHeading index="02" title="Selected work" />
 
 				<article className="case" data-reveal>
-					<div className="case-head">
-						<h3>RegWrangler</h3>
-						<span className="tag">contract build · with Hazelbrook Legal</span>
-					</div>
-					<div className="case-body">
-						<div className="case-copy">
-							<p>
-								Regulatory change-management platform for Australian financial
-								services, built with law firm{" "}
-								<a href="https://hazelbrooklegal.com">Hazelbrook Legal</a>.
-								Engaged as the sole engineer to take it from concept to a
-								working, scalable product: obligation tracking, assessment and
-								allocation workflows, and bulk import of legacy regulatory
-								trackers.
-							</p>
-							<p>
-								<span className="em-peach">
-									First paying client within one month
-								</span>{" "}
-								of the first iteration going live. Now used by some of
-								Australia&rsquo;s largest financial services organisations.
-							</p>
+					<span className="case-num">01</span>
+					<div className="case-main">
+						<div className="case-top">
+							<h3>RegWrangler</h3>
+							<span className="chip mono">contract build</span>
+							<span className="chip mono">with Hazelbrook Legal</span>
 						</div>
-						<div className="case-facts">
-							<div className="fact">
-								<span className="k mono">role</span>
-								<span>sole contract engineer</span>
-							</div>
-							<div className="fact">
-								<span className="k mono">to revenue</span>
-								<span>&lt; 1 month from v1</span>
-							</div>
-							<div className="fact">
-								<span className="k mono">in production</span>
-								<span>major Australian FS orgs</span>
-							</div>
-						</div>
+						<p>
+							Regulatory change-management platform for Australian financial
+							services, built with law firm{" "}
+							<a href="https://hazelbrooklegal.com">Hazelbrook Legal</a>.
+							Engaged as the sole engineer to take it from concept to a
+							working, scalable product — obligation tracking, assessment and
+							allocation workflows, bulk import of legacy regulatory trackers.{" "}
+							<em className="serif-it accent">
+								First paying client within one month of v1.
+							</em>{" "}
+							Now used by some of Australia&rsquo;s largest financial services
+							organisations.
+						</p>
 					</div>
+					<dl className="case-facts">
+						<div>
+							<dt className="mono">role</dt>
+							<dd>sole contract engineer</dd>
+						</div>
+						<div>
+							<dt className="mono">to revenue</dt>
+							<dd>&lt; 1 month from v1</dd>
+						</div>
+						<div>
+							<dt className="mono">in production</dt>
+							<dd>major Australian FS orgs</dd>
+						</div>
+					</dl>
 				</article>
 
 				<article className="case" data-reveal>
-					<div className="case-head">
-						<h3>
+					<span className="case-num">02</span>
+					<div className="case-main">
+						<div className="case-top">
 							<img className="case-logo" src={openstoryLogo} alt="" />
-							OpenStory
-						</h3>
-						<span className="tag">founder · open source</span>
-					</div>
-					<div className="case-body">
-						<div className="case-copy">
-							<p>
-								Open-source, AI-native video platform that turns a script into
-								a fully storyboarded, motion-and-music video — deployed
-								end-to-end on Cloudflare&rsquo;s edge. A durable pipeline of
-								30+ composable Cloudflare Workflows orchestrates script
-								analysis, storyboarding, image-to-video motion, music and final
-								merge, with idempotent auto-retried steps.
-							</p>
-							<p>
-								15+ frontier models integrated (Kling v3, Seedance, Grok
-								Imagine, Nano Banana) behind a unified model selector. A
-								deterministic Playwright E2E suite with record-and-replay
-								mocking of every model call gates each PR in CI.
-							</p>
+							<h3>OpenStory</h3>
+							<span className="chip mono">founder</span>
+							<span className="chip mono">open source</span>
 						</div>
-						<div className="case-facts">
-							<div className="fact">
-								<span className="k mono">scale</span>
-								<span>2,200+ commits · 350+ PRs</span>
-							</div>
-							<div className="fact">
-								<span className="k mono">stack</span>
-								<span>TanStack Start · Workers · D1 · R2</span>
-							</div>
-							<div className="fact">
-								<span className="k mono">visit</span>
+						<p>
+							Open-source, AI-native video platform: paste a script, get a
+							fully storyboarded, motion-and-music video — end-to-end on
+							Cloudflare&rsquo;s edge. A durable pipeline of 30+ composable
+							Workflows orchestrates script analysis, storyboarding,
+							image-to-video motion, music and final merge. 15+ frontier models
+							behind one selector; a deterministic Playwright E2E suite with
+							record-and-replay mocking gates every PR.
+						</p>
+					</div>
+					<dl className="case-facts">
+						<div>
+							<dt className="mono">scale</dt>
+							<dd>2,200+ commits · 350+ PRs</dd>
+						</div>
+						<div>
+							<dt className="mono">stack</dt>
+							<dd>TanStack Start · Workers · D1 · R2</dd>
+						</div>
+						<div>
+							<dt className="mono">visit</dt>
+							<dd>
 								<a href="https://openstory.so">openstory.so</a>
-							</div>
+							</dd>
 						</div>
-					</div>
+					</dl>
 				</article>
 
 				<article className="case" data-reveal>
-					<div className="case-head">
-						<h3>
+					<span className="case-num">03</span>
+					<div className="case-main">
+						<div className="case-top">
 							<img className="case-logo" src={flowLogo} alt="" />
-							Flow Wallet
-						</h3>
-						<span className="tag">engineering lead · Flow Foundation</span>
-					</div>
-					<div className="case-body">
-						<div className="case-copy">
-							<p>
-								Lead engineer on the Chrome-extension crypto wallet for the
-								Flow blockchain — 20k+ monthly active users. Led an
-								architectural overhaul of the extension core that cut critical
-								P0 issues by over 95%, unified state management, and introduced
-								an E2E strategy of 180+ Vitest and Playwright tests with
-								automated CI/CD.
-							</p>
+							<h3>Flow Wallet</h3>
+							<span className="chip mono">engineering lead</span>
+							<span className="chip mono">Flow Foundation</span>
 						</div>
-						<div className="case-facts">
-							<div className="fact">
-								<span className="k mono">users</span>
-								<span>20k+ MAU</span>
-							</div>
-							<div className="fact">
-								<span className="k mono">p0 issues</span>
-								<span>down 95%+</span>
-							</div>
-							<div className="fact">
-								<span className="k mono">source</span>
+						<p>
+							Lead engineer on the Chrome-extension crypto wallet for the Flow
+							blockchain — 20k+ monthly active users. Led an architectural
+							overhaul of the extension core that cut critical P0 issues by
+							over 95%, unified state management, and introduced 180+ Vitest
+							and Playwright tests with automated CI/CD.
+						</p>
+					</div>
+					<dl className="case-facts">
+						<div>
+							<dt className="mono">users</dt>
+							<dd>20k+ MAU</dd>
+						</div>
+						<div>
+							<dt className="mono">p0 issues</dt>
+							<dd>down 95%+</dd>
+						</div>
+						<div>
+							<dt className="mono">source</dt>
+							<dd>
 								<a href="https://github.com/onflow/FRW-Extension">
 									onflow/FRW-Extension
 								</a>
-							</div>
+							</dd>
 						</div>
-					</div>
+					</dl>
 				</article>
 
 				<article className="case" data-reveal>
-					<div className="case-head">
-						<h3>
+					<span className="case-num">04</span>
+					<div className="case-main">
+						<div className="case-top">
 							<img className="case-logo" src={commaLogo} alt="" />
-							Comma Payments
-						</h3>
-						<span className="tag">founder &amp; CEO · acquired 2023</span>
-					</div>
-					<div className="case-body">
-						<div className="case-copy">
-							<p>
-								Founded Comma to end manual business-banking processes and
-								brought open-banking bulk payments to market first in the UK —
-								one-click payroll for millions of employees. Raised US $6m+
-								from top-tier funds, built a team of 15 engineers, grew to
-								£18m+/month in payment volume, and sold the business to Weavr
-								in March 2023.
-							</p>
+							<h3>Comma Payments</h3>
+							<span className="chip mono">founder &amp; CEO</span>
+							<span className="chip chip-accent mono">acquired 2023</span>
 						</div>
-						<div className="case-facts">
-							<div className="fact">
-								<span className="k mono">volume</span>
-								<span>£18m+ / month</span>
-							</div>
-							<div className="fact">
-								<span className="k mono">raised</span>
-								<span>US $6m+</span>
-							</div>
-							<div className="fact">
-								<span className="k mono">exit</span>
-								<span>acquired by Weavr</span>
-							</div>
-						</div>
+						<p>
+							Founded Comma to end manual business-banking processes and
+							brought open-banking bulk payments to market first in the UK —
+							one-click payroll for millions of employees. Raised US $6m+ from
+							top-tier funds, built a team of 15 engineers, grew to £18m+/month
+							in payment volume, and sold the business to Weavr in March 2023.
+						</p>
 					</div>
+					<dl className="case-facts">
+						<div>
+							<dt className="mono">volume</dt>
+							<dd>£18m+ / month</dd>
+						</div>
+						<div>
+							<dt className="mono">raised</dt>
+							<dd>US $6m+</dd>
+						</div>
+						<div>
+							<dt className="mono">exit</dt>
+							<dd>acquired by Weavr</dd>
+						</div>
+					</dl>
 				</article>
 			</section>
 
 			{/* ─────────────── §03 Open source */}
 			<section ref={ossRef} className="sect" id="oss">
-				<SectionHeading index="§03" title="Open source" />
+				<SectionHeading index="03" title="Open source" />
 				<p className="sect-lede" data-reveal>
-					My code is public — the fastest way to evaluate me is to read it.
+					My code is public — the fastest way to evaluate me is to{" "}
+					<em className="serif-it">read it.</em>
 				</p>
 
-				<div className="oss-grid">
-					<a
-						className="card oss-card"
-						href="https://github.com/TanStack/ai"
-						data-reveal
-					>
+				<div className="oss-grid" data-reveal>
+					<a className="oss-card" href="https://github.com/TanStack/ai">
 						<img className="oss-logo" src={tanstackLogo} alt="TanStack" />
-						<div>
-							<h3>
-								TanStack AI <span className="tag">core maintainer</span>
-							</h3>
-							<p>
-								Type-safe, provider-agnostic TypeScript SDK for AI apps. Top-3
-								contributor, 30+ merged PRs: streaming structured output across
-								five providers, and four provider adapters authored from
-								scratch — fal.ai, ElevenLabs, Grok and OpenRouter.
-							</p>
-							<span className="mono-accent repo">TanStack/ai →</span>
-						</div>
+						<h3>TanStack AI</h3>
+						<p className="mono oss-role">core maintainer · top-3 contributor</p>
+						<p>
+							30+ merged PRs on the type-safe AI SDK: streaming structured
+							output across five providers, four adapters authored from scratch
+							— fal.ai, ElevenLabs, Grok, OpenRouter.
+						</p>
+						<span className="mono oss-repo">TanStack/ai ↗</span>
 					</a>
 					<a
-						className="card oss-card"
+						className="oss-card"
 						href="https://github.com/openstory-so/openstory"
-						data-reveal
 					>
 						<img className="oss-logo" src={openstoryLogo} alt="OpenStory" />
-						<div>
-							<h3>
-								OpenStory <span className="tag">author</span>
-							</h3>
-							<p>
-								The full AI video-generation platform, MIT licensed. 700+ file
-								strict TypeScript codebase held at zero type-aware lint
-								warnings while shipping weekly. 96% of repo history.
-							</p>
-							<span className="mono-accent repo">openstory-so/openstory →</span>
-						</div>
+						<h3>OpenStory</h3>
+						<p className="mono oss-role">author · 96% of history</p>
+						<p>
+							The full AI video platform, MIT licensed. 700+ file strict
+							TypeScript codebase held at zero type-aware lint warnings while
+							shipping weekly.
+						</p>
+						<span className="mono oss-repo">openstory-so/openstory ↗</span>
 					</a>
 					<a
-						className="card oss-card"
+						className="oss-card"
 						href="https://github.com/onflow/FRW-Extension"
-						data-reveal
 					>
 						<img className="oss-logo" src={flowLogo} alt="Flow" />
-						<div>
-							<h3>
-								Flow Reference Wallet <span className="tag">lead</span>
-							</h3>
-							<p>
-								The open-source Chrome extension wallet for Flow and Flow EVM.
-								Architectural overhaul, state-management refactor, CI/CD and
-								end-to-end test coverage.
-							</p>
-							<span className="mono-accent repo">onflow/FRW-Extension →</span>
-						</div>
+						<h3>Flow Reference Wallet</h3>
+						<p className="mono oss-role">engineering lead</p>
+						<p>
+							The open-source Chrome extension wallet for Flow and Flow EVM.
+							Architectural overhaul, state-management refactor, CI/CD,
+							end-to-end test coverage.
+						</p>
+						<span className="mono oss-repo">onflow/FRW-Extension ↗</span>
 					</a>
-					<a
-						className="card oss-card"
-						href="https://github.com/tombeckenham/dotfiles"
-						data-reveal
-					>
-						<span className="oss-logo oss-logo-gh">
-							<Github />
-						</span>
-						<div>
-							<h3>
-								dotfiles <span className="tag">personal</span>
-							</h3>
-							<p>
-								My multi-agent Claude Code workflow: parallel agents on git
-								worktrees, scoped permissions, tuned hooks. How I ship at the
-								pace the case studies above describe.
-							</p>
-							<span className="mono-accent repo">tombeckenham/dotfiles →</span>
-						</div>
+					<a className="oss-card" href="https://github.com/tombeckenham/dotfiles">
+						<span className="oss-logo oss-logo-mono">⌘</span>
+						<h3>dotfiles</h3>
+						<p className="mono oss-role">personal tooling</p>
+						<p>
+							My multi-agent Claude Code workflow: parallel agents on git
+							worktrees, scoped permissions, tuned hooks. How I ship at the
+							pace above.
+						</p>
+						<span className="mono oss-repo">tombeckenham/dotfiles ↗</span>
 					</a>
 				</div>
 			</section>
 
 			{/* ─────────────── §04 Experience */}
 			<section ref={expRef} className="sect" id="experience">
-				<SectionHeading index="§04" title="Experience" />
+				<SectionHeading index="04" title="Experience" />
 				<div className="xp">
 					<ExpRow
 						years="2026 —"
-						role="Core maintainer"
 						org="TanStack AI"
+						role="Core maintainer"
 						note="Top-3 contributor on the type-safe AI SDK."
 					/>
 					<ExpRow
 						years="2025 —"
-						role="Founder & sole engineer"
 						org="OpenStory"
+						role="Founder & sole engineer"
 						note="Open-source AI video platform on Cloudflare's edge."
 					/>
 					<ExpRow
-						years="2024 – 25"
-						role="Full-stack engineer (lead)"
+						years="2024–25"
 						org="Flow Foundation"
+						role="Full-stack engineer (lead)"
 						note="Flow Wallet Chrome extension, 20k+ MAU."
 					/>
 					<ExpRow
-						years="2023 – 24"
-						role="VP Strategy"
+						years="2023–24"
 						org="Weavr"
+						role="VP Strategy"
 						note="Post-acquisition integration; £650k+ TCV deals."
 					/>
 					<ExpRow
-						years="2020 – 21"
-						role="Senior frontend (contract)"
+						years="2020–21"
 						org="Orbiit, via Toptal"
+						role="Senior frontend (contract)"
 						note="Owned everything user-facing for the founders."
 					/>
 					<ExpRow
-						years="2019 – 23"
-						role="Founder & CEO"
+						years="2019–23"
 						org="Comma Payments"
+						role="Founder & CEO"
 						note="Open-banking bulk payments. Acquired by Weavr."
 					/>
 					<ExpRow
-						years="2017 – 19"
-						role="Head of Technology"
+						years="2017–19"
 						org="MurphyCobb"
+						role="Head of Technology"
 						note="Built the tech division; global brand-spend platform."
 					/>
 					<ExpRow
-						years="2006 – 17"
-						role="Founder"
+						years="2006–17"
 						org="Specle"
+						role="Founder"
 						note="Ad-spec platform for the Guardian, Daily Mail, Condé Nast. Sold."
 					/>
 					<ExpRow
-						years="1999 – 06"
-						role="Lead engineer"
+						years="1999–06"
 						org="Adstream (now XR)"
+						role="Lead engineer"
 						note="C++ PDF and colour-correction software; ran the graphics team."
 					/>
 				</div>
@@ -506,7 +488,7 @@ function App() {
 
 			{/* ─────────────── §05 Writing */}
 			<section ref={writingRef} className="sect" id="writing">
-				<SectionHeading index="§05" title="Writing" />
+				<SectionHeading index="05" title="Writing" />
 				<ul className="writes">
 					<li data-reveal>
 						<a href="https://medium.com/@tombeckenham/rewriting-whole-apps-with-ai-69e879ad5f9c">
@@ -515,7 +497,7 @@ function App() {
 								Using Claude Code to rapidly rebuild a legacy frontend — where
 								the speedups come from, and where they don&rsquo;t.
 							</span>
-							<span className="mono-accent">→ medium</span>
+							<span className="mono w-meta">Medium ↗</span>
 						</a>
 					</li>
 					<li data-reveal>
@@ -525,48 +507,48 @@ function App() {
 								Lessons from fintech on pricing, margin, and AI products that
 								pay for themselves instead of their infra bill.
 							</span>
-							<span className="mono-accent">→ medium</span>
+							<span className="mono w-meta">Medium ↗</span>
 						</a>
 					</li>
 				</ul>
 			</section>
 
-			{/* ─────────────── §06 Contact */}
-			<section ref={contactRef} className="sect contact-sect" id="contact">
-				<div className="contact-inner" data-reveal>
-					<p className="mono kicker">
-						<i className="dot" /> Currently taking engagements · Sydney · remote
-					</p>
-					<h2 className="contact-title">
-						Have something that needs{" "}
-						<em className="em-peach">shipping?</em>
-					</h2>
-					<p className="contact-lede">
-						Contract, fractional or advisory. If it involves TypeScript, AI
-						pipelines, payments or getting a product to its first paying
-						customer, I&rsquo;ve probably done it before — recently.
-					</p>
-					<div className="hero-ctas">
-						<a className="btn btn-primary" href={`mailto:${EMAIL}`}>
-							{EMAIL} <Arrow />
-						</a>
-						<a className="btn" href="https://www.linkedin.com/in/tombeckenham/">
-							LinkedIn
-						</a>
-						<a className="btn" href="https://x.com/tombeckenham">
-							X / Twitter
-						</a>
-					</div>
-					<p className="mono refs">
-						References available — including investors and board members from
-						both exits.
-					</p>
+			<Marquee />
+
+			{/* ─────────────── Contact */}
+			<section ref={contactRef} className="contact" id="contact">
+				<p className="mono kicker" data-reveal>
+					<span className="accent">●</span> Currently taking engagements ·
+					Sydney · remote
+				</p>
+				<h2 className="contact-title" data-reveal>
+					Have something that
+					<br />
+					needs <em className="serif-it accent">shipping?</em>
+				</h2>
+				<a className="contact-mail" href={`mailto:${EMAIL}`} data-reveal>
+					{EMAIL}
+				</a>
+				<div className="hero-ctas" data-reveal>
+					<a className="btn" href="https://www.linkedin.com/in/tombeckenham/">
+						LinkedIn
+					</a>
+					<a className="btn" href="https://github.com/tombeckenham">
+						GitHub
+					</a>
+					<a className="btn" href="https://x.com/tombeckenham">
+						X / Twitter
+					</a>
 				</div>
+				<p className="mono refs" data-reveal>
+					References available — including investors and board members from
+					both exits.
+				</p>
 			</section>
 
-			<footer className="foot">
+			<footer className="foot mono">
 				<span>© 2026 Tom Beckenham · Sydney</span>
-				<span className="mono">built with react · vite · no trackers</span>
+				<span>built with react · vite · no trackers</span>
 			</footer>
 		</div>
 	);
@@ -574,25 +556,40 @@ function App() {
 
 /* ───────────── helpers ───────────── */
 
+function Marquee() {
+	const items = [...MARQUEE, ...MARQUEE];
+	return (
+		<div className="marquee" aria-hidden>
+			<div className="marquee-track">
+				{items.map((item, i) => (
+					<span key={i}>
+						{item}
+						<i className="accent"> ✦ </i>
+					</span>
+				))}
+			</div>
+		</div>
+	);
+}
+
 function SectionHeading({ index, title }: { index: string; title: string }) {
 	return (
 		<div className="sect-head" data-reveal>
-			<span className="sect-index mono-accent">{index}</span>
+			<span className="sect-index mono">({index})</span>
 			<h2 className="sect-title">{title}</h2>
-			<span className="sect-rule" />
 		</div>
 	);
 }
 
 function ExpRow({
 	years,
-	role,
 	org,
+	role,
 	note,
 }: {
 	years: string;
-	role: string;
 	org: string;
+	role: string;
 	note: string;
 }) {
 	return (
@@ -600,35 +597,8 @@ function ExpRow({
 			<span className="xp-years mono">{years}</span>
 			<span className="xp-org">{org}</span>
 			<span className="xp-role">{role}</span>
-			<span className="xp-note mute">{note}</span>
+			<span className="xp-note">{note}</span>
 		</div>
-	);
-}
-
-function Arrow() {
-	return (
-		<svg
-			width="14"
-			height="14"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			aria-hidden
-		>
-			<path d="M5 12h14" />
-			<path d="M13 6l6 6-6 6" />
-		</svg>
-	);
-}
-
-function Github() {
-	return (
-		<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-			<path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.04.77 2.1 0 1.52-.01 2.74-.01 3.11 0 .3.2.66.8.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z" />
-		</svg>
 	);
 }
 

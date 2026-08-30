@@ -24,10 +24,10 @@ Tom Beckenham's personal site — a single-page React app (`src/App.tsx`) presen
 - The hero reveal fires on mount; each section ref (`servicesRef`, `workRef`, etc.) gets a ScrollTrigger that replays its `[data-reveal]` children when scrolled into view.
 - New sections need a ref + an entry in the `sections` array inside the scroll `useEffect`.
 
-**Design system — `src/App.css`.** Hand-written CSS, no Tailwind, no component library. Tokens live on `:root`:
-- Palette: graphite bg (`--bg`, `--bg-lift`, `--bg-paper`), warm off-white fg (`--fg`, `--fg-mid`, `--fg-mute`), hairline borders (`--hair`, `--hair-bright`), **single accent `--peach` (#e8937a)** plus secondary `--cyan`. Don't introduce new accent colors — peach is the only highlight.
-- Type: `--display` (Instrument Serif), `--serif` (Fraunces, body), `--mono` (JetBrains Mono, for `.mono` labels/kickers). Loaded via `<link>` in `index.html`.
-- Reusable classes: `.mono`, `.mono-accent`, `.mute`, `.em-peach`, `.underline-peach`, `.link-arrow`, `.btn` / `.btn-primary`, `.sect-head` / `.sect-index` / `.sect-title` / `.sect-rule`, `.card`, `.stat-row`. Prefer composing these over writing new styles.
+**Design system — `src/App.css`.** Hand-written CSS, no Tailwind, no component library. Swiss-editorial / light-brutalist look: paper background, strong hairline rules, oversized uppercase grotesk type with serif-italic accent words. Tokens live on `:root`:
+- Palette: warm paper bg (`--paper`, `--paper-lift`), near-black ink fg (`--ink`, `--ink-soft`, `--ink-mute`), rules (`--hair` light, `--rule` strong), **single accent `--accent` (#ff4b00 international orange)**. Don't introduce new accent colors.
+- Type: `--display` (Archivo variable — headings use `font-weight: 800`, `font-stretch: 112–115%`, uppercase, tight tracking), `--serif-it` (Instrument Serif italic, for accent words via `.serif-it`), `--mono` (JetBrains Mono for `.mono` labels/kickers/buttons). Loaded via `<link>` in `index.html`.
+- Reusable classes: `.mono`, `.accent`, `.serif-it`, `.btn` / `.btn-solid`, `.chip` / `.chip-accent`, `.sect-head` / `.sect-index` / `.sect-title`, `.sticker`. Signature patterns: `.svc-row` hover inverts to ink-on-paper→paper-on-ink, `.case-num` outlined numerals via `-webkit-text-stroke`, `.oss-grid` hairline grid via 1px gaps on a `--rule` background, `.marquee` scrolling strip (duplicated content, respects `prefers-reduced-motion`), grayscale images that regain color on hover.
 - Responsive breakpoint is a single `@media (max-width: 900px)` block at the bottom of `App.css`.
 
 **Indentation.** `App.tsx` and `App.css` use **tabs**, not spaces. Match the surrounding file.
