@@ -17,17 +17,17 @@ Tom Beckenham's personal site — a single-page React app (`src/App.tsx`) presen
 
 ## Architecture
 
-**Single-file page.** `src/App.tsx` renders the entire site: hero + five anchored sections (`§01 Now`, `§02 OSS`, `§03 Writing`, `§04 Previously`, `§05 Contact`) plus a sticky top nav and status-line footer. Helper components (`SectionHeading`, `PipelineNode`, `Wire`, `Arrow`, `Github`, `OpenStoryMark`) live at the bottom of the same file. If you add a new section, keep this structure — don't fragment into per-section files unless it grows substantially.
+**Single-file page.** `src/App.tsx` renders the entire site — a commercial landing page aimed at contract work: hero (headshot + pitch + stats) and six anchored sections (`§01 Services`, `§02 Selected work`, `§03 Open source`, `§04 Experience`, `§05 Writing`, contact CTA) plus a sticky top nav and footer. Helper components (`SectionHeading`, `ExpRow`, `Arrow`, `Github`) live at the bottom of the same file. If you add a new section, keep this structure — don't fragment into per-section files unless it grows substantially.
 
 **Animations.** GSAP + ScrollTrigger (registered in `App.tsx`). The convention is:
 - Mark any element that should fade/slide in with `data-reveal`.
-- The hero reveal fires on mount; each section ref (`nowRef`, `ossRef`, etc.) gets a ScrollTrigger that replays its `[data-reveal]` children when scrolled into view.
+- The hero reveal fires on mount; each section ref (`servicesRef`, `workRef`, etc.) gets a ScrollTrigger that replays its `[data-reveal]` children when scrolled into view.
 - New sections need a ref + an entry in the `sections` array inside the scroll `useEffect`.
 
-**Design system — `src/App.css`.** Hand-written CSS, no Tailwind, no component library. Tokens live on `:root`:
-- Palette: graphite bg (`--bg`, `--bg-lift`, `--bg-paper`), warm off-white fg (`--fg`, `--fg-mid`, `--fg-mute`), hairline borders (`--hair`, `--hair-bright`), **single accent `--peach` (#e8937a)** plus secondary `--cyan`. Don't introduce new accent colors — peach is the only highlight.
-- Type: `--display` (Instrument Serif), `--serif` (Fraunces, body), `--mono` (JetBrains Mono, for `.mono` labels/kickers). Loaded via `<link>` in `index.html`.
-- Reusable classes: `.mono`, `.mono-accent`, `.mute`, `.em-peach`, `.underline-peach`, `.link-arrow`, `.btn` / `.btn-primary`, `.sect-head` / `.sect-index` / `.sect-title` / `.sect-rule`, `.card`, `.stat-row`. Prefer composing these over writing new styles.
+**Design system — `src/App.css`.** Hand-written CSS, no Tailwind, no component library. Swiss-editorial / light-brutalist look: paper background, strong hairline rules, oversized uppercase grotesk type with serif-italic accent words. Tokens live on `:root`:
+- Palette: warm paper bg (`--paper`, `--paper-lift`), near-black ink fg (`--ink`, `--ink-soft`, `--ink-mute`), rules (`--hair` light, `--rule` strong), **single accent `--accent` (#ff4b00 international orange)**. Don't introduce new accent colors.
+- Type: `--display` (Archivo variable — headings use `font-weight: 800`, `font-stretch: 112–115%`, uppercase, tight tracking), `--serif-it` (Instrument Serif italic, for accent words via `.serif-it`), `--mono` (JetBrains Mono for `.mono` labels/kickers/buttons). Loaded via `<link>` in `index.html`.
+- Reusable classes: `.mono`, `.accent`, `.serif-it`, `.btn` / `.btn-solid`, `.chip` / `.chip-accent`, `.sect-head` / `.sect-index` / `.sect-title`, `.sticker`. Signature patterns: `.svc-row` hover inverts to ink-on-paper→paper-on-ink, `.case-num` outlined numerals via `-webkit-text-stroke`, `.oss-grid` hairline grid via 1px gaps on a `--rule` background, `.marquee` scrolling strip (duplicated content, respects `prefers-reduced-motion`), grayscale images that regain color on hover.
 - Responsive breakpoint is a single `@media (max-width: 900px)` block at the bottom of `App.css`.
 
 **Indentation.** `App.tsx` and `App.css` use **tabs**, not spaces. Match the surrounding file.
