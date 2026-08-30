@@ -17,11 +17,11 @@ Tom Beckenham's personal site — a single-page React app (`src/App.tsx`) presen
 
 ## Architecture
 
-**Single-file page.** `src/App.tsx` renders the entire site: hero + five anchored sections (`§01 Now`, `§02 OSS`, `§03 Writing`, `§04 Previously`, `§05 Contact`) plus a sticky top nav and status-line footer. Helper components (`SectionHeading`, `PipelineNode`, `Wire`, `Arrow`, `Github`, `OpenStoryMark`) live at the bottom of the same file. If you add a new section, keep this structure — don't fragment into per-section files unless it grows substantially.
+**Single-file page.** `src/App.tsx` renders the entire site — a commercial landing page aimed at contract work: hero (headshot + pitch + stats) and six anchored sections (`§01 Services`, `§02 Selected work`, `§03 Open source`, `§04 Experience`, `§05 Writing`, contact CTA) plus a sticky top nav and footer. Helper components (`SectionHeading`, `ExpRow`, `Arrow`, `Github`) live at the bottom of the same file. If you add a new section, keep this structure — don't fragment into per-section files unless it grows substantially.
 
 **Animations.** GSAP + ScrollTrigger (registered in `App.tsx`). The convention is:
 - Mark any element that should fade/slide in with `data-reveal`.
-- The hero reveal fires on mount; each section ref (`nowRef`, `ossRef`, etc.) gets a ScrollTrigger that replays its `[data-reveal]` children when scrolled into view.
+- The hero reveal fires on mount; each section ref (`servicesRef`, `workRef`, etc.) gets a ScrollTrigger that replays its `[data-reveal]` children when scrolled into view.
 - New sections need a ref + an entry in the `sections` array inside the scroll `useEffect`.
 
 **Design system — `src/App.css`.** Hand-written CSS, no Tailwind, no component library. Tokens live on `:root`:
