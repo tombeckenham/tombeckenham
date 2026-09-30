@@ -10,7 +10,7 @@ import commaLogo from "./assets/images/comma-logo.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const EMAIL = "tombeckenham@gmail.com";
+const LINKEDIN = "https://www.linkedin.com/in/tombeckenham/";
 
 const MARQUEE = [
 	"Available for contract",
@@ -89,7 +89,7 @@ function App() {
 					<a href="#experience">Experience</a>
 					<a href="#writing">Writing</a>
 				</div>
-				<a className="btn btn-solid" href={`mailto:${EMAIL}`}>
+				<a className="btn btn-solid" href="#contact">
 					Start a project ↗
 				</a>
 			</nav>
@@ -119,11 +119,8 @@ function App() {
 						leadership.
 					</p>
 					<div className="hero-ctas" data-reveal>
-						<a className="btn btn-solid" href={`mailto:${EMAIL}`}>
-							Email me ↗
-						</a>
-						<a className="btn" href="https://www.linkedin.com/in/tombeckenham/">
-							LinkedIn
+						<a className="btn btn-solid" href={LINKEDIN}>
+							Message me on LinkedIn ↗
 						</a>
 						<a className="btn" href="https://github.com/tombeckenham">
 							GitHub
@@ -526,13 +523,10 @@ function App() {
 					<br />
 					needs <em className="serif-it accent">shipping?</em>
 				</h2>
-				<a className="contact-mail" href={`mailto:${EMAIL}`} data-reveal>
-					{EMAIL}
+				<a className="contact-mail" href={LINKEDIN} data-reveal>
+					Message me on LinkedIn ↗
 				</a>
 				<div className="hero-ctas" data-reveal>
-					<a className="btn" href="https://www.linkedin.com/in/tombeckenham/">
-						LinkedIn
-					</a>
 					<a className="btn" href="https://github.com/tombeckenham">
 						GitHub
 					</a>
